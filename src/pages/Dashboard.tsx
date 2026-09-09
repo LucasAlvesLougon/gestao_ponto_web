@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { User } from '../lib/types'
 import { useTimeEntries } from '../hooks/useTimeEntries'
+import { useDailySummary } from '../hooks/useSummary'
 import { ClockActionCard } from '../components/clock/ClockActionCard'
 import { DailyEntriesList } from '../components/clock/DailyEntriesList'
+import { DailySummaryCard } from '../components/dashboard/DailySummaryCard'
 
 interface DashboardProps {
   user: User
@@ -44,6 +46,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const handleToday = () => {
     setSelectedDate(new Date().toISOString().slice(0, 10))
   }
+
+  const { data: dailySummaryData, isLoading: isSummaryLoading } = useDailySummary(selectedDate)
 
   return (
     <div className="py-8 px-4 sm:px-6 max-w-5xl mx-auto space-y-6">
@@ -99,6 +103,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           timezone={user.timezone}
         />
       )}
+
+      {/* Card de Resumo da Jornada Diária */}
+      <DailySummaryCard
+        summary={dailySummaryData?.summary}
+        isLoading={isSummaryLoading}
+      />
 
       {/* Lista e Histórico do Dia */}
       <DailyEntriesList
