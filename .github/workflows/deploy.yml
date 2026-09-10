@@ -33,11 +33,19 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://api.muponto.com/api/v1' }}
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || '283172265638-2cib86k0v38qmjae78snu5ps1p4sd513.apps.googleusercontent.com' }}
 
+      - name: 🧹 Sanitizar Endereço do Servidor FTP
+        id: parse_ftp
+        run: |
+          RAW_SERVER="${{ secrets.FTP_SERVER }}"
+          # Remove qualquer prefixo ftp://, ftps://, http://, https:// e barras finais
+          CLEAN_SERVER=$(echo "$RAW_SERVER" | sed -E 's|^[a-zA-Z]+://||' | sed -E 's|/.*$||' | tr -d '[:space:]')
+          echo "server=$CLEAN_SERVER" >> $GITHUB_OUTPUT
+
       - name: 🚀 Deploy FTP para a Hostinger
-        if: ${{ secrets.FTP_SERVER != '' }}
+        if: ${{ steps.parse_ftp.outputs.server != '' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ steps.parse_ftp.outputs.server }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT || 21 }}
