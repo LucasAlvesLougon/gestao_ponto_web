@@ -80,9 +80,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 required
                 value={dailyHours}
                 onChange={(e) => setDailyHours(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] text-sm bg-[#1c1c20] focus:bg-[#27272a] focus:outline-none focus:border-[#fafafa] font-mono font-medium text-[#fafafa]"
+                className="w-full pl-3.5 pr-24 py-2.5 rounded-[18px] border border-[#27272a] text-sm bg-[#1c1c20] focus:bg-[#27272a] focus:outline-none focus:border-[#fafafa] font-mono font-medium text-[#fafafa] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
-              <span className="absolute right-4 top-2.5 text-xs text-[#a1a1aa] font-medium">horas / dia</span>
+              <span className="absolute right-4 top-2.5 text-xs text-[#a1a1aa] font-medium pointer-events-none">horas / dia</span>
             </div>
             <p className="text-[11px] text-[#a1a1aa] mt-1">
               Padrão comum: 8 horas (tempo integral) ou 6 horas (estágio / meio período).
