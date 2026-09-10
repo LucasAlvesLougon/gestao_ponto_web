@@ -154,7 +154,7 @@ function AuthPageContent({
               relatórios instantâneos e zero atraso.&rdquo;
             </p>
             <footer className="font-mono text-sm font-semibold text-muted-foreground">
-              ~ Lucas Lougon • Gestão & Eficiência
+              • Gestão & Eficiência
             </footer>
           </blockquote>
         </div>
