@@ -134,9 +134,11 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   const [dateInput, setDateInput] = useState(getInitialDateStr)
   const [timeInput, setTimeInput] = useState(getInitialTimeStr)
   const [error, setError] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInput(formatNumericDate(e.target.value))
+    setSuccessMsg(null)
   }
 
   const handleDateBlur = () => {
@@ -145,6 +147,7 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeInput(formatNumericTime(e.target.value))
+    setSuccessMsg(null)
   }
 
   const handleTimeBlur = () => {
@@ -154,6 +157,7 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccessMsg(null)
 
     const correctedDate = autoCorrectDate(dateInput)
     const correctedTime = autoCorrectTime(timeInput)
@@ -174,14 +178,61 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
     const [day, month, year] = dateParts
     const [hours, minutes] = timeParts
 
+    // Validação: não permitir data ou horário posterior ao momento atual
+    const dNum = parseInt(day, 10)
+    const mNum = parseInt(month, 10) - 1
+    const yNum = parseInt(year, 10)
+    const hNum = parseInt(hours, 10)
+    const minNum = parseInt(minutes, 10)
+
+    const inputDate = new Date(yNum, mNum, dNum, hNum, minNum)
+    const now = new Date()
+    if (inputDate.getTime() > now.getTime() + 60000) {
+      setError('Não é permitido registrar ponto para data ou horário futuro.')
+      return
+    }
+
     // Formato ISO esperado pela API: YYYY-MM-DDTHH:mm:00
     const isoDateTime = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`
 
     try {
       await onSave(selectedType, isoDateTime)
-      onClose()
+
+      // Regra: fechar a tela apenas na confirmação do registro de saída
+      if (selectedType === 'CLOCK_OUT') {
+        onClose()
+      } else {
+        // Mantém a tela aberta e avança o layer para a próxima etapa da jornada
+        const nextSteps: Record<TimeEntryType, { next: TimeEntryType; msg: string }> = {
+          CLOCK_IN: {
+            next: 'BREAK_START',
+            msg: 'Entrada registrada com sucesso! Prossiga informando o Início do Intervalo.',
+          },
+          BREAK_START: {
+            next: 'BREAK_END',
+            msg: 'Início de Intervalo registrado! Prossiga informando o Retorno do Intervalo.',
+          },
+          BREAK_END: {
+            next: 'CLOCK_OUT',
+            msg: 'Retorno de Intervalo registrado! Prossiga informando a Saída para finalizar.',
+          },
+          CLOCK_OUT: {
+            next: 'CLOCK_OUT',
+            msg: 'Saída registrada!',
+          },
+        }
+
+        const step = nextSteps[selectedType]
+        setSuccessMsg(step.msg)
+        setSelectedType(step.next)
+      }
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.response?.data?.errors?.type?.[0] || 'Erro ao registrar marcação manual.'
+      const msg =
+        err.response?.data?.message ||
+        err.response?.data?.errors?.custom_time?.[0] ||
+        err.response?.data?.errors?.registered_at?.[0] ||
+        err.response?.data?.errors?.type?.[0] ||
+        'Erro ao registrar marcação manual.'
       setError(msg)
     }
   }
@@ -207,6 +258,13 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
             <X className="h-5 w-5" />
           </button>
         </div>
+
+        {successMsg && (
+          <div className="mx-6 mt-4 p-3.5 rounded-2xl bg-emerald-950/50 border border-emerald-800/60 text-emerald-300 text-xs flex items-center gap-2">
+            <Check className="h-4 w-4 shrink-0 text-emerald-400" />
+            <span>{successMsg}</span>
+          </div>
+        )}
 
         {error && (
           <div className="mx-6 mt-4 p-3.5 rounded-2xl bg-red-950/50 border border-red-900/60 text-red-300 text-xs flex items-center gap-2">
@@ -313,7 +371,7 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
               onClick={onClose}
               className="px-4 py-2.5 text-xs font-semibold text-slate-400 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
             >
-              Cancelar
+              {successMsg ? 'Fechar' : 'Cancelar'}
             </button>
             <button
               type="submit"
@@ -328,7 +386,11 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
               ) : (
                 <>
                   <Check className="h-4 w-4" />
-                  <span>Confirmar Registro Manual</span>
+                  <span>
+                    {selectedType === 'CLOCK_OUT'
+                      ? 'Salvar Saída e Fechar'
+                      : `Salvar ${layers.find((l) => l.type === selectedType)?.title || 'Registro'} e Continuar`}
+                  </span>
                 </>
               )}
             </button>

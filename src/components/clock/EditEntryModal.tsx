@@ -79,9 +79,24 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
       return
     }
 
-    setError(null)
     const [d, m, y] = dateParts
     const [hh, mm] = timeParts
+
+    // Validação: não permitir data ou horário posterior ao momento atual
+    const dNum = parseInt(d, 10)
+    const mNum = parseInt(m, 10) - 1
+    const yNum = parseInt(y, 10)
+    const hNum = parseInt(hh, 10)
+    const minNum = parseInt(mm, 10)
+
+    const inputDate = new Date(yNum, mNum, dNum, hNum, minNum)
+    const now = new Date()
+    if (inputDate.getTime() > now.getTime() + 60000) {
+      setError('Não é permitido ajustar registro para data ou horário futuro.')
+      return
+    }
+
+    setError(null)
     const isoDateTime = `${y}-${m}-${d}T${hh}:${mm}:00`
 
     try {

@@ -76,7 +76,6 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
 
   const handleManualSave = async (type: TimeEntryType, customTime: string) => {
     await recordEntry({ type, customTime })
-    setIsManualModalOpen(false)
   }
 
   const handleEditSave = async (id: number, time: string, reason: string) => {
