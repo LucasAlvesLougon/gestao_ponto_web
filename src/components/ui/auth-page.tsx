@@ -18,7 +18,7 @@ import { useAuth } from '@/hooks/useAuth'
 
 const GOOGLE_CLIENT_ID =
   import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-  '844495701284-qvgpkr9446kr02dki8vs29191t1p33o7.apps.googleusercontent.com'
+  '283172265638-2cib86k0v38qmjae78snu5ps1p4sd513.apps.googleusercontent.com'
 
 export interface AuthPageProps {
   onProcessGoogleToken?: (credential: string) => Promise<any>

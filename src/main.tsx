@@ -19,7 +19,7 @@ export const queryClient = new QueryClient({
 // Força tema escuro permanentemente
 document.documentElement.classList.add('dark')
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '844495701284-qvgpkr9446kr02dki8vs29191t1p33o7.apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '283172265638-2cib86k0v38qmjae78snu5ps1p4sd513.apps.googleusercontent.com'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
