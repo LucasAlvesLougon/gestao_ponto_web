@@ -40,7 +40,29 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
   })
   const [error, setError] = useState<string | null>(null)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [popoverPlacement, setPopoverPlacement] = useState<'bottom' | 'top'>('bottom')
   const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isCalendarOpen) return
+
+    const updatePlacement = () => {
+      if (!calendarRef.current) return
+      const rect = calendarRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      const spaceAbove = rect.top
+
+      if (spaceBelow < 330 && spaceAbove > 330) {
+        setPopoverPlacement('top')
+      } else {
+        setPopoverPlacement('bottom')
+      }
+    }
+
+    updatePlacement()
+    window.addEventListener('resize', updatePlacement)
+    return () => window.removeEventListener('resize', updatePlacement)
+  }, [isCalendarOpen])
 
   useEffect(() => {
     if (!isCalendarOpen) return
@@ -190,9 +212,13 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
           </div>
           <span className="text-[10px] text-[#a1a1aa] mt-1 block">Apenas números</span>
 
-          {/* Componente de Calendário solicitado */}
+          {/* Componente de Calendário com posicionamento inteligente e sem cortes */}
           {isCalendarOpen && (
-            <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div
+              className={`absolute left-0 z-50 animate-in fade-in zoom-in-95 duration-150 ${
+                popoverPlacement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
+              }`}
+            >
               <Calendar
                 mode="single"
                 selected={parseDateFromInput(dateInput)}
@@ -273,9 +299,9 @@ export const EditEntryModal: React.FC<EditEntryModalProps> = ({
   if (!entry) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-[#121214] w-full max-w-md rounded-[24px] card-shadow border border-[#27272a] overflow-hidden text-[#fafafa]">
-        <div className="px-6 py-4 border-b border-[#27272a] flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
+      <div className="bg-[#121214] w-full max-w-md rounded-[24px] card-shadow border border-[#27272a] text-[#fafafa] relative my-auto">
+        <div className="px-6 py-4 border-b border-[#27272a] flex items-center justify-between rounded-t-[24px]">
           <h3 className="font-semibold text-[#fafafa] text-sm tracking-tight">Ajustar Registro de Ponto</h3>
           <button
             onClick={onClose}

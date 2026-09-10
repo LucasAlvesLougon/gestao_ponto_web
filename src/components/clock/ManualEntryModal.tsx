@@ -122,7 +122,30 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [popoverPlacement, setPopoverPlacement] = useState<'bottom' | 'top'>('bottom')
   const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isCalendarOpen) return
+
+    const updatePlacement = () => {
+      if (!calendarRef.current) return
+      const rect = calendarRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      const spaceAbove = rect.top
+
+      // O calendário tem aprox 320px de altura
+      if (spaceBelow < 330 && spaceAbove > 330) {
+        setPopoverPlacement('top')
+      } else {
+        setPopoverPlacement('bottom')
+      }
+    }
+
+    updatePlacement()
+    window.addEventListener('resize', updatePlacement)
+    return () => window.removeEventListener('resize', updatePlacement)
+  }, [isCalendarOpen])
 
   useEffect(() => {
     if (!isCalendarOpen) return
@@ -256,10 +279,10 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-[#121214] w-full max-w-lg rounded-[24px] card-shadow border border-[#27272a] overflow-hidden text-[#fafafa]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
+      <div className="bg-[#121214] w-full max-w-lg rounded-[24px] card-shadow border border-[#27272a] text-[#fafafa] relative my-auto">
         {/* Top Header */}
-        <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between rounded-t-[24px]">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-[10px] bg-[#1c1c20] text-[#fafafa] border border-[#27272a]">
               <Clock className="h-5 w-5" />
@@ -363,9 +386,13 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                 Insira apenas números (ex: 10092026) ou selecione no calendário
               </span>
 
-              {/* Componente de Calendário solicitado */}
+              {/* Componente de Calendário com posicionamento inteligente e sem cortes */}
               {isCalendarOpen && (
-                <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div
+                  className={`absolute left-0 z-50 animate-in fade-in zoom-in-95 duration-150 ${
+                    popoverPlacement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
+                  }`}
+                >
                   <Calendar
                     mode="single"
                     selected={parseDateFromInput(dateInput)}
