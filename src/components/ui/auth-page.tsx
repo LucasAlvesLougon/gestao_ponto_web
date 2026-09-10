@@ -50,7 +50,11 @@ function AuthPageContent({
   const error = externalError ?? localError ?? auth.error
   const isLoading = externalLoading ?? auth.isSubmitting
 
+  const lastGoogleEmail = typeof window !== 'undefined' ? (localStorage.getItem('last_google_email') || undefined) : undefined
+
   const triggerGoogleLogin = useGoogleLogin({
+    hint: lastGoogleEmail,
+    prompt: lastGoogleEmail ? '' : undefined,
     onSuccess: async (tokenResponse) => {
       setIsGoogleLoading(true)
       setLocalError(null)
@@ -61,6 +65,7 @@ function AuthPageContent({
         const userInfo = await userInfoRes.json()
 
         if (userInfo.email) {
+          localStorage.setItem('last_google_email', userInfo.email)
           const payload = {
             email: userInfo.email,
             name: userInfo.name || userInfo.email.split('@')[0],
