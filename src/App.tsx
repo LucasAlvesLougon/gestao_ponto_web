@@ -9,7 +9,7 @@ import { useAuth } from './hooks/useAuth'
 import { Loader2 } from 'lucide-react'
 
 export default function App() {
-  const { user, isAuthenticated, isLoading, error, login, register, logout, updateProfile, clearError } = useAuth()
+  const { user, isAuthenticated, isCheckingSession, isSubmitting, error, login, register, logout, updateProfile, clearError } = useAuth()
   const [authView, setAuthView] = useState<'login' | 'register'>('login')
   const [activeTab, setActiveTab] = useState<TabType>('clock')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -19,7 +19,7 @@ export default function App() {
     setAuthView(view)
   }
 
-  if (isLoading) {
+  if (isCheckingSession) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#09090b]">
         <Loader2 className="h-8 w-8 animate-spin text-[#fafafa] mb-2" />
@@ -67,7 +67,7 @@ export default function App() {
               }}
               onSwitchToRegister={() => handleSwitchAuth('register')}
               error={error}
-              isLoading={isLoading}
+              isLoading={isSubmitting}
             />
           ) : (
             <RegisterForm
@@ -76,7 +76,7 @@ export default function App() {
               }}
               onSwitchToLogin={() => handleSwitchAuth('login')}
               error={error}
-              isLoading={isLoading}
+              isLoading={isSubmitting}
             />
           )}
         </div>

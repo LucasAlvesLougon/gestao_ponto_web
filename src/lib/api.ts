@@ -26,9 +26,6 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('gestao_ponto_token')
       localStorage.removeItem('gestao_ponto_user')
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
-      }
     }
     return Promise.reject(error)
   }

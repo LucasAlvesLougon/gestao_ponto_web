@@ -59,4 +59,12 @@ export interface MonthlySummary {
 export interface AuthResponse {
   user: User
   token: string
+  message?: string
+  initial_data?: {
+    date: string
+    timezone: string
+    next_expected_type: TimeEntryType
+    entries: TimeEntry[]
+    summary: DailySummary
+  }
 }

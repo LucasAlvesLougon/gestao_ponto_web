@@ -62,17 +62,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
 
         {/* Navegador de Dias */}
-        <div className="flex items-center gap-1 bg-[#1c1c20] p-1 rounded-[18px] border border-[#27272a]">
+        <div className="flex items-center justify-between sm:justify-start gap-1 bg-[#18181b] p-1 rounded-[18px] border border-[#27272a] w-full sm:w-auto">
           <button
             onClick={handlePreviousDay}
             title="Dia anterior"
             aria-label="Dia anterior"
-            className="p-2 rounded-[18px] hover:bg-[#27272a] text-[#a1a1aa] hover:text-[#fafafa] transition-colors cursor-pointer"
+            className="p-2 rounded-[18px] hover:bg-[#27272a] text-[#a1a1aa] hover:text-[#fafafa] active:scale-[0.95] transition-all cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center gap-2 px-3 text-xs font-medium text-[#fafafa] font-mono">
+          <div className="flex items-center gap-2 px-3 text-xs font-medium text-[#fafafa] font-mono select-none">
             <Calendar className="h-4 w-4 text-[#fafafa]" />
             <span>{formatDateBR(selectedDate)}</span>
           </div>
@@ -81,7 +81,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             onClick={handleNextDay}
             title="Próximo dia"
             aria-label="Próximo dia"
-            className="p-2 rounded-[18px] hover:bg-[#27272a] text-[#a1a1aa] hover:text-[#fafafa] transition-colors cursor-pointer"
+            className="p-2 rounded-[18px] hover:bg-[#27272a] text-[#a1a1aa] hover:text-[#fafafa] active:scale-[0.95] transition-all cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -89,7 +89,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           {!isToday && (
             <button
               onClick={handleToday}
-              className="ml-1 px-3 py-1.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] rounded-[18px] text-xs font-medium transition-colors cursor-pointer"
+              className="ml-auto sm:ml-1 px-3 py-1.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] rounded-[18px] text-xs font-medium active:scale-[0.95] transition-all cursor-pointer shadow-xs"
             >
               Hoje
             </button>

@@ -165,13 +165,13 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
             <span>Status: {statusConfig.label}</span>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-semibold text-[#fafafa] tracking-tight font-mono">
+          <div className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-[#fafafa] tracking-tight font-mono select-none">
             {currentTime || '--:--:--'}
           </div>
 
-          <p className="text-sm font-normal text-[#a1a1aa] flex items-center justify-center lg:justify-start gap-1.5">
-            <Calendar className="h-4 w-4 text-[#a1a1aa]" />
-            {currentDateFormatted}
+          <p className="text-xs sm:text-sm font-normal text-[#a1a1aa] flex items-center justify-center lg:justify-start gap-1.5">
+            <Calendar className="h-4 w-4 text-[#a1a1aa] shrink-0" />
+            <span>{currentDateFormatted}</span>
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
             onClick={handleQuickRecord}
             disabled={isRecording}
             title="Registrar marcação instantânea com a hora atual"
-            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-all flex items-center gap-3.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer shadow-xs"
           >
             {isRecording ? (
               <div className="flex items-center gap-3">
@@ -216,7 +216,7 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
             onClick={handleOpenManual}
             disabled={isRecording}
             title="Registrar marcação informando data e hora retroativa"
-            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-[#1c1c20] hover:bg-[#27272a] text-[#fafafa] border border-[#27272a] active:scale-[0.99] cursor-pointer group"
+            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-all flex items-center gap-3.5 bg-[#18181b] hover:bg-[#27272a] text-[#fafafa] border border-[#27272a] hover:border-[#3f3f46] active:scale-[0.98] cursor-pointer group shadow-xs"
           >
             <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
               <CalendarClock className="h-5 w-5" />

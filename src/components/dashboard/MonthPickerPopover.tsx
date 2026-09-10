@@ -85,7 +85,7 @@ export const MonthPickerPopover: React.FC<MonthPickerPopoverProps> = ({
   return (
     <div
       ref={popoverRef}
-      className="absolute right-0 top-full mt-2 z-50 w-72 bg-[#121214] border border-[#27272a] rounded-[24px] p-4 card-shadow animate-in fade-in zoom-in-95 duration-150 text-[#fafafa]"
+      className="absolute right-0 top-full mt-2 z-50 w-72 max-w-[calc(100vw-2rem)] bg-[#121214] border border-[#27272a] rounded-[24px] p-4 card-shadow animate-in fade-in zoom-in-95 duration-150 text-[#fafafa]"
     >
       {/* Seletor de Ano */}
       <div className="flex items-center justify-between pb-3 border-b border-[#27272a]">

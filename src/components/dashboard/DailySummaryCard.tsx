@@ -45,10 +45,10 @@ export const DailySummaryCard: React.FC<DailySummaryCardProps> = ({ summary, isL
       </div>
 
       {/* Grid de Métricas */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {/* Total Trabalhado */}
-        <div className="p-4 rounded-[18px] bg-[#1c1c20] border border-[#27272a] flex items-center gap-3.5">
-          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
+        <div className="p-4 rounded-[18px] bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors flex items-center gap-3.5">
+          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
             <Clock className="h-5 w-5" />
           </div>
           <div>
@@ -60,8 +60,8 @@ export const DailySummaryCard: React.FC<DailySummaryCardProps> = ({ summary, isL
         </div>
 
         {/* Meta Diária */}
-        <div className="p-4 rounded-[18px] bg-[#1c1c20] border border-[#27272a] flex items-center gap-3.5">
-          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
+        <div className="p-4 rounded-[18px] bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors flex items-center gap-3.5">
+          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
             <Target className="h-5 w-5" />
           </div>
           <div>
@@ -73,8 +73,8 @@ export const DailySummaryCard: React.FC<DailySummaryCardProps> = ({ summary, isL
         </div>
 
         {/* Saldo do Dia */}
-        <div className="p-4 rounded-[18px] bg-[#1c1c20] border border-[#27272a] flex items-center gap-3.5">
-          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
+        <div className="p-4 rounded-[18px] bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] transition-colors flex items-center gap-3.5">
+          <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
             {summary.is_positive_balance ? (
               <TrendingUp className="h-5 w-5 text-[#fafafa]" />
             ) : (

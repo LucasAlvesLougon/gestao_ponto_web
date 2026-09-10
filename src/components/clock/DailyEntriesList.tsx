@@ -125,10 +125,10 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
             return (
               <div
                 key={entry.id || idx}
-                className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] hover:bg-[#27272a]/70 transition-colors"
+                className="flex items-center justify-between p-3.5 sm:p-4 rounded-[18px] border border-[#27272a] bg-[#18181b] hover:bg-[#27272a]/40 hover:border-[#3f3f46] transition-all"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
+                  <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
@@ -149,12 +149,12 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => setSelectedEntry(entry)}
                     title="Ajustar horário"
                     aria-label="Ajustar horário"
-                    className="p-2 text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-[18px] transition-colors cursor-pointer"
+                    className="p-2 text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] active:scale-[0.95] rounded-[18px] transition-all cursor-pointer"
                   >
                     <Edit3 className="h-4 w-4" />
                   </button>
@@ -163,7 +163,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     disabled={deletingId === entry.id}
                     title="Excluir marcação"
                     aria-label="Excluir marcação"
-                    className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
+                    className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 active:scale-[0.95] rounded-[18px] transition-all cursor-pointer disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
