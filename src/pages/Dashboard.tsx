@@ -6,16 +6,18 @@ import { useDailySummary } from '../hooks/useSummary'
 import { ClockActionCard } from '../components/clock/ClockActionCard'
 import { DailyEntriesList } from '../components/clock/DailyEntriesList'
 import { DailySummaryCard } from '../components/dashboard/DailySummaryCard'
+import { getLocalDateString, formatDateBR, addDays } from '../lib/dateUtils'
 
 interface DashboardProps {
   user: User
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
-  // Data selecionada no formato YYYY-MM-DD
-  const [selectedDate, setSelectedDate] = useState(() => {
-    return new Date().toISOString().slice(0, 10)
-  })
+  const timezone = user.timezone || 'America/Sao_Paulo'
+  const todayStr = getLocalDateString(new Date(), timezone)
+
+  // Data selecionada no formato YYYY-MM-DD respeitando o fuso brasileiro do usuário
+  const [selectedDate, setSelectedDate] = useState(() => todayStr)
 
   const {
     entries,
@@ -29,22 +31,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     isDeleting,
   } = useTimeEntries(selectedDate)
 
-  const isToday = selectedDate === new Date().toISOString().slice(0, 10)
+  const isToday = selectedDate === todayStr
 
   const handlePreviousDay = () => {
-    const d = new Date(selectedDate + 'T12:00:00')
-    d.setDate(d.getDate() - 1)
-    setSelectedDate(d.toISOString().slice(0, 10))
+    setSelectedDate((current) => addDays(current, -1))
   }
 
   const handleNextDay = () => {
-    const d = new Date(selectedDate + 'T12:00:00')
-    d.setDate(d.getDate() + 1)
-    setSelectedDate(d.toISOString().slice(0, 10))
+    setSelectedDate((current) => addDays(current, 1))
   }
 
   const handleToday = () => {
-    setSelectedDate(new Date().toISOString().slice(0, 10))
+    setSelectedDate(todayStr)
   }
 
   const { data: dailySummaryData, isLoading: isSummaryLoading } = useDailySummary(selectedDate)
@@ -73,7 +71,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
           <div className="flex items-center gap-2 px-3 text-xs font-bold text-slate-700 dark:text-slate-200 font-mono">
             <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            <span>{selectedDate.split('-').reverse().join('/')}</span>
+            <span>{formatDateBR(selectedDate)}</span>
           </div>
 
           <button
@@ -102,7 +100,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           nextExpectedType={nextExpectedType}
           onRecord={(type, customTime) => recordEntry({ type, customTime })}
           isRecording={isRecording}
-          timezone={user.timezone}
+          timezone={timezone}
         />
       )}
 
@@ -120,6 +118,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         onDelete={(id) => deleteEntry(id)}
         isUpdating={isUpdating}
         isDeleting={isDeleting}
+        selectedDate={selectedDate}
+        timezone={timezone}
       />
     </div>
   )

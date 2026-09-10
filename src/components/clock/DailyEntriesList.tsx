@@ -10,6 +10,8 @@ interface DailyEntriesListProps {
   onDelete: (id: number) => Promise<any>
   isUpdating: boolean
   isDeleting: boolean
+  selectedDate?: string
+  timezone?: string
 }
 
 export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
@@ -18,9 +20,15 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
   onUpdate,
   onDelete,
   isUpdating,
+  selectedDate,
+  timezone = 'America/Sao_Paulo',
 }) => {
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+
+  const dateFormatted = selectedDate ? selectedDate.split('-').reverse().join('/') : null
+  const todayStr = new Intl.DateTimeFormat('sv-SE', { timeZone: timezone }).format(new Date())
+  const isToday = !selectedDate || selectedDate === todayStr
 
   const typeDetails = {
     CLOCK_IN: {
@@ -60,7 +68,9 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
     <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Histórico de Hoje</h3>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+            {isToday ? 'Histórico de Hoje' : `Histórico do Dia (${dateFormatted})`}
+          </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Todas as marcações registradas para esta jornada</p>
         </div>
         <div className="text-xs font-semibold px-3 py-1 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700">
@@ -78,9 +88,13 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
           <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center mx-auto mb-3 text-xl">
             📅
           </div>
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">Nenhum ponto registrado hoje</h4>
+          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">
+            {isToday ? 'Nenhum ponto registrado hoje' : `Nenhum ponto registrado em ${dateFormatted}`}
+          </h4>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
-            Utilize as opções acima para registrar sua Entrada e iniciar o acompanhamento da jornada de trabalho.
+            {isToday
+              ? 'Utilize as opções acima para registrar sua Entrada e iniciar o acompanhamento da jornada de trabalho.'
+              : 'Não foram encontrados registros para esta data.'}
           </p>
         </div>
       ) : (
@@ -93,13 +107,20 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
             }
             const Icon = details.icon
 
-            const timeStr = entry.registered_at
-              ? new Date(entry.registered_at).toLocaleTimeString('pt-BR', {
+            let timeStr = '--:--'
+            if (entry.registered_at) {
+              try {
+                timeStr = new Intl.DateTimeFormat('pt-BR', {
+                  timeZone: timezone,
                   hour: '2-digit',
                   minute: '2-digit',
                   second: '2-digit',
-                })
-              : '--:--'
+                  hour12: false,
+                }).format(new Date(entry.registered_at))
+              } catch {
+                timeStr = new Date(entry.registered_at).toLocaleTimeString('pt-BR', { hour12: false })
+              }
+            }
 
             return (
               <div

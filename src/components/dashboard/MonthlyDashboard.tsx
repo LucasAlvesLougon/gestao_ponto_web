@@ -4,10 +4,11 @@ import { useMonthlySummary } from '../../hooks/useSummary'
 import { ExportButtons } from './ExportButtons'
 import { DayEntriesModal } from './DayEntriesModal'
 import { MonthPickerPopover } from './MonthPickerPopover'
+import { getLocalMonthString, formatMonthYearLabel, formatDateBR, addMonths } from '../../lib/dateUtils'
 
 export const MonthlyDashboard: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(() => {
-    return new Date().toISOString().slice(0, 7) // YYYY-MM
+    return getLocalMonthString(new Date())
   })
   const [selectedDateForModal, setSelectedDateForModal] = useState<string | null>(null)
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false)
@@ -16,23 +17,14 @@ export const MonthlyDashboard: React.FC = () => {
   const summary = data?.summary
 
   const handlePreviousMonth = () => {
-    const [year, month] = selectedMonth.split('-').map(Number)
-    const date = new Date(year, month - 2, 1)
-    setSelectedMonth(date.toISOString().slice(0, 7))
+    setSelectedMonth((curr) => addMonths(curr, -1))
   }
 
   const handleNextMonth = () => {
-    const [year, month] = selectedMonth.split('-').map(Number)
-    const date = new Date(year, month, 1)
-    setSelectedMonth(date.toISOString().slice(0, 7))
+    setSelectedMonth((curr) => addMonths(curr, 1))
   }
 
-  const [year, monthNum] = selectedMonth.split('-')
-  const monthNames = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ]
-  const currentMonthLabel = `${monthNames[parseInt(monthNum, 10) - 1]} de ${year}`
+  const currentMonthLabel = formatMonthYearLabel(selectedMonth)
 
   return (
     <div className="space-y-6">
@@ -196,8 +188,7 @@ export const MonthlyDashboard: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
                 {summary.daily_summaries.map((day) => {
-                  const [y, m, d] = day.date.split('-')
-                  const dateFormatted = `${d}/${m}/${y}`
+                  const dateFormatted = formatDateBR(day.date)
 
                   return (
                     <tr key={day.date} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
