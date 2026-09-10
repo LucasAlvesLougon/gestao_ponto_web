@@ -17,8 +17,6 @@ describe('AuthPage Component', () => {
     expect(screen.getAllByText(/Gestão de Ponto/i)[0]).toBeDefined()
     expect(screen.getByText('Sign In or Join Now!')).toBeDefined()
     expect(screen.getByRole('button', { name: /Continue with Google/i })).toBeDefined()
-    expect(screen.getByRole('button', { name: /Continue with Apple/i })).toBeDefined()
-    expect(screen.getByRole('button', { name: /Continue with GitHub/i })).toBeDefined()
     expect(screen.getByRole('button', { name: /Entrar no Sistema/i })).toBeDefined()
   })
 

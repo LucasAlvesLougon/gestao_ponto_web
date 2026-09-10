@@ -105,10 +105,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             Cadastre-se gratuitamente
           </button>
         </p>
-
-        <div className="text-[11px] text-[#a1a1aa] bg-[#1c1c20] p-2.5 rounded-[18px] border border-[#27272a]">
-          <span className="font-semibold text-[#fafafa]">Ambiente de Testes:</span> admin@ponto.com • senha1234
-        </div>
       </div>
     </div>
   )
