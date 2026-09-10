@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { GoogleLogin, useGoogleOneTapLogin, GoogleOAuthProvider } from '@react-oauth/google'
+import { useGoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { Button } from './button'
 import {
   AppleIcon,
@@ -31,7 +31,6 @@ export interface AuthPageProps {
 }
 
 function AuthPageContent({
-  onProcessGoogleToken,
   onLoginWithGoogle,
   onLoginWithEmail,
   onSwitchToRegister,
@@ -51,39 +50,48 @@ function AuthPageContent({
   const error = externalError ?? localError ?? auth.error
   const isLoading = externalLoading ?? auth.isSubmitting
 
-  const lastGoogleEmail = typeof window !== 'undefined' ? (localStorage.getItem('last_google_email') || undefined) : undefined
+  const triggerGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setIsGoogleLoading(true)
+      setLocalError(null)
+      try {
+        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        })
+        const userInfo = await userInfoRes.json()
 
-  const handleGoogleCredential = async (credential: string) => {
-    setIsGoogleLoading(true)
-    setLocalError(null)
-    try {
-      if (onProcessGoogleToken) {
-        await onProcessGoogleToken(credential)
-      } else if (onLoginWithGoogle) {
-        await onLoginWithGoogle({ idToken: credential, credential })
-      } else {
-        await auth.processGoogleToken(credential)
-      }
-    } catch (err: any) {
-      setLocalError(err.message || 'Falha ao se conectar com nosso Servidor via Google.')
-    } finally {
-      setIsGoogleLoading(false)
-    }
-  }
-
-  // Suporte a Google One Tap & Autenticação automática instantânea (igual cinerandom)
-  useGoogleOneTapLogin({
-    onSuccess: async (credentialResponse) => {
-      if (credentialResponse.credential) {
-        await handleGoogleCredential(credentialResponse.credential)
+        if (userInfo.email) {
+          const payload = {
+            email: userInfo.email,
+            name: userInfo.name || userInfo.email.split('@')[0],
+            google_id: userInfo.sub,
+          }
+          if (onLoginWithGoogle) {
+            await onLoginWithGoogle(payload)
+          } else {
+            await auth.loginWithGoogle(payload)
+          }
+        } else {
+          throw new Error('Não foi possível obter os dados da conta Google.')
+        }
+      } catch (err: any) {
+        setLocalError(err.message || 'Falha ao autenticar com o Google.')
+      } finally {
+        setIsGoogleLoading(false)
       }
     },
-    onError: () => {},
-    auto_select: true,
-    use_fedcm_for_button: true,
-    use_fedcm_for_prompt: true,
-    disabled: Boolean(auth.user),
+    onError: (errorResponse) => {
+      console.warn('Google login cancelado ou erro:', errorResponse)
+    },
   })
+
+  const handleGoogleButtonClick = () => {
+    if (typeof window !== 'undefined' && (window as any).google?.accounts?.oauth2) {
+      triggerGoogleLogin()
+    } else {
+      setIsGoogleModalOpen(true)
+    }
+  }
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -198,39 +206,21 @@ function AuthPageContent({
             </div>
           )}
 
-          {/* Botões de Login Social com Funcionalidade Google (igual cinerandom) */}
-          <div className="space-y-2.5">
-            <div className="w-full flex justify-center py-1 overflow-hidden rounded-full" style={{ colorScheme: 'light' }}>
-              <GoogleLogin
-                onSuccess={async (credentialResponse) => {
-                  if (credentialResponse.credential) {
-                    await handleGoogleCredential(credentialResponse.credential)
-                  }
-                }}
-                onError={() => {
-                  setLocalError('Login com Google cancelado ou falhou.')
-                }}
-                theme="filled_black"
-                shape="pill"
-                size="large"
-                text="continue_with"
-                width="100%"
-                auto_select={true}
-                login_hint={lastGoogleEmail}
-                use_fedcm_for_button={true}
-                use_fedcm_for_prompt={true}
-              />
-            </div>
-
+          {/* Botões de Login Social com Funcionalidade Google */}
+          <div className="space-y-2">
             <Button
               type="button"
               size="lg"
               className="w-full cursor-pointer transition-all active:scale-[0.98] border border-border bg-card hover:bg-accent text-foreground hover:text-foreground shadow-xs flex items-center justify-center gap-2"
-              onClick={() => setIsGoogleModalOpen(true)}
+              onClick={handleGoogleButtonClick}
               disabled={isLoading || isGoogleLoading}
             >
-              <GoogleIcon className="size-4" />
-              <span>Continue with Google</span>
+              {isGoogleLoading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <GoogleIcon className="size-4" />
+              )}
+              <span>{isGoogleLoading ? 'Entrando com Google...' : 'Continue with Google'}</span>
             </Button>
 
             <Button
@@ -309,8 +299,17 @@ function AuthPageContent({
             </Button>
           </form>
 
-          <div className="text-[11px] text-muted-foreground bg-muted/60 p-2.5 rounded-lg border border-border text-center">
-            <span className="font-semibold text-foreground">Ambiente de Testes:</span> admin@ponto.com • senha1234
+          <div className="text-[11px] text-muted-foreground bg-muted/60 p-2.5 rounded-lg border border-border text-center flex flex-col gap-1">
+            <div>
+              <span className="font-semibold text-foreground">Ambiente de Testes:</span> admin@ponto.com • senha1234
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsGoogleModalOpen(true)}
+              className="text-[10px] text-muted-foreground hover:text-foreground underline cursor-pointer"
+            >
+              Simular contas Google / Demo
+            </button>
           </div>
 
           <p className="text-muted-foreground mt-6 text-center text-xs">
