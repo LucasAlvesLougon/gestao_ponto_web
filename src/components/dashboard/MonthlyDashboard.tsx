@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { Calendar, ChevronLeft, ChevronRight, Clock, Target, TrendingUp, TrendingDown, CheckCircle2, AlertCircle, Edit3 } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, ChevronDown, Clock, Target, TrendingUp, TrendingDown, CheckCircle2, AlertCircle, Edit3 } from 'lucide-react'
 import { useMonthlySummary } from '../../hooks/useSummary'
 import { ExportButtons } from './ExportButtons'
 import { DayEntriesModal } from './DayEntriesModal'
+import { MonthPickerPopover } from './MonthPickerPopover'
 
 export const MonthlyDashboard: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(() => {
     return new Date().toISOString().slice(0, 7) // YYYY-MM
   })
   const [selectedDateForModal, setSelectedDateForModal] = useState<string | null>(null)
+  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false)
 
   const { data, isLoading } = useMonthlySummary(selectedMonth)
   const summary = data?.summary
@@ -45,30 +47,54 @@ export const MonthlyDashboard: React.FC = () => {
           {/* Botões de Exportação CSV e Impressão PDF */}
           <ExportButtons month={selectedMonth} />
 
-          {/* Navegador de Meses */}
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 transition-colors">
-            <button
-              onClick={handlePreviousMonth}
-              title="Mês anterior"
-              aria-label="Mês anterior"
-              className="p-2 rounded-xl hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors shadow-xs cursor-pointer"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
+          {/* Navegador de Meses com Seletor Interativo */}
+          <div className="relative">
+            <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700/80 transition-colors">
+              <button
+                type="button"
+                onClick={handlePreviousMonth}
+                title="Mês anterior"
+                aria-label="Mês anterior"
+                className="p-2 rounded-xl hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors shadow-xs cursor-pointer"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
 
-            <div className="flex items-center gap-2 px-3 text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">
-              <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <span>{currentMonthLabel}</span>
+              <button
+                type="button"
+                onClick={() => setIsMonthPickerOpen((prev) => !prev)}
+                title="Clique para escolher mês e ano"
+                aria-label="Clique para escolher mês e ano"
+                aria-expanded={isMonthPickerOpen}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white dark:hover:bg-slate-700/80 text-xs font-bold text-slate-800 dark:text-slate-200 font-mono transition-colors cursor-pointer group"
+              >
+                <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                <span>{currentMonthLabel}</span>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 text-slate-400 group-hover:text-blue-500 transition-transform duration-200 ${
+                    isMonthPickerOpen ? 'rotate-180 text-blue-500' : ''
+                  }`}
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextMonth}
+                title="Próximo mês"
+                aria-label="Próximo mês"
+                className="p-2 rounded-xl hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors shadow-xs cursor-pointer"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
 
-            <button
-              onClick={handleNextMonth}
-              title="Próximo mês"
-              aria-label="Próximo mês"
-              className="p-2 rounded-xl hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors shadow-xs cursor-pointer"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            {/* Popover de Escolha de Mês e Ano */}
+            <MonthPickerPopover
+              selectedMonth={selectedMonth}
+              onChange={setSelectedMonth}
+              isOpen={isMonthPickerOpen}
+              onClose={() => setIsMonthPickerOpen(false)}
+            />
           </div>
         </div>
       </div>

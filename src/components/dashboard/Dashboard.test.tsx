@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { DailySummaryCard } from './DailySummaryCard'
 import { MonthlyDashboard } from './MonthlyDashboard'
 import { DayEntriesModal } from './DayEntriesModal'
+import { MonthPickerPopover } from './MonthPickerPopover'
 import type { DailySummary } from '../../lib/types'
 
 const queryClient = new QueryClient()
@@ -59,6 +60,26 @@ describe('Dashboard Components', () => {
 
     expect(screen.getByText(/Detalhamento do Dia/i)).toBeDefined()
     expect(screen.getByText('Adicionar Batida')).toBeDefined()
+  })
+
+  it('opens MonthPickerPopover with months and allows selecting month', () => {
+    let selected = '2026-09'
+    render(
+      <MonthPickerPopover
+        selectedMonth={selected}
+        onChange={(m) => { selected = m }}
+        isOpen={true}
+        onClose={() => {}}
+      />
+    )
+
+    expect(screen.getByText('2026')).toBeDefined()
+    expect(screen.getByText('Jan')).toBeDefined()
+    expect(screen.getByText('Dez')).toBeDefined()
+    expect(screen.getByText('Ir para o mês atual')).toBeDefined()
+
+    fireEvent.click(screen.getByText('Mar'))
+    expect(selected).toBe('2026-03')
   })
 })
 

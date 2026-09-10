@@ -1,0 +1,152 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
+
+interface MonthPickerPopoverProps {
+  selectedMonth: string // YYYY-MM
+  onChange: (month: string) => void
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const MonthPickerPopover: React.FC<MonthPickerPopoverProps> = ({
+  selectedMonth,
+  onChange,
+  isOpen,
+  onClose,
+}) => {
+  const [selectedYear, selectedMonthNum] = selectedMonth.split('-').map(Number)
+  const [displayYear, setDisplayYear] = useState(selectedYear)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  // Sincroniza o ano ao abrir o popover ou quando selectedMonth muda
+  useEffect(() => {
+    if (isOpen) {
+      setDisplayYear(selectedYear)
+    }
+  }, [isOpen, selectedYear])
+
+  // Fecha ao clicar fora ou pressionar Escape
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  const months = [
+    { short: 'Jan', full: 'Janeiro', num: 1 },
+    { short: 'Fev', full: 'Fevereiro', num: 2 },
+    { short: 'Mar', full: 'Março', num: 3 },
+    { short: 'Abr', full: 'Abril', num: 4 },
+    { short: 'Mai', full: 'Maio', num: 5 },
+    { short: 'Jun', full: 'Junho', num: 6 },
+    { short: 'Jul', full: 'Julho', num: 7 },
+    { short: 'Ago', full: 'Agosto', num: 8 },
+    { short: 'Set', full: 'Setembro', num: 9 },
+    { short: 'Out', full: 'Outubro', num: 10 },
+    { short: 'Nov', full: 'Novembro', num: 11 },
+    { short: 'Dez', full: 'Dezembro', num: 12 },
+  ]
+
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  const currentMonthNum = now.getMonth() + 1
+  const currentMonthIso = `${currentYear}-${String(currentMonthNum).padStart(2, '0')}`
+
+  const handleSelectMonth = (monthNum: number) => {
+    const formatted = `${displayYear}-${String(monthNum).padStart(2, '0')}`
+    onChange(formatted)
+    onClose()
+  }
+
+  const handleGoToCurrentMonth = () => {
+    onChange(currentMonthIso)
+    onClose()
+  }
+
+  return (
+    <div
+      ref={popoverRef}
+      className="absolute right-0 top-full mt-2 z-50 w-72 bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+    >
+      {/* Seletor de Ano */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <button
+          type="button"
+          onClick={() => setDisplayYear((y) => y - 1)}
+          className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Ano anterior"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        <span className="font-mono font-bold text-sm text-white">{displayYear}</span>
+
+        <button
+          type="button"
+          onClick={() => setDisplayYear((y) => y + 1)}
+          className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          title="Próximo ano"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Grade de Meses (3 colunas x 4 linhas) */}
+      <div className="grid grid-cols-3 gap-2 py-3">
+        {months.map((m) => {
+          const isSelected = displayYear === selectedYear && m.num === selectedMonthNum
+          const isCurrent = displayYear === currentYear && m.num === currentMonthNum
+
+          return (
+            <button
+              key={m.num}
+              type="button"
+              onClick={() => handleSelectMonth(m.num)}
+              title={m.full}
+              className={`py-2 px-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-center ${
+                isSelected
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 ring-2 ring-blue-400/40 font-bold'
+                  : isCurrent
+                  ? 'bg-slate-800/80 text-blue-400 border border-blue-500/40 hover:bg-slate-800'
+                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              {m.short}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Ação rápida: Mês Atual */}
+      <div className="pt-2.5 border-t border-slate-800 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={handleGoToCurrentMonth}
+          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-[11px] font-semibold text-blue-400 hover:text-blue-300 hover:bg-slate-800/60 transition-colors cursor-pointer"
+        >
+          <Calendar className="h-3 w-3" />
+          <span>Ir para o mês atual</span>
+        </button>
+      </div>
+    </div>
+  )
+}
