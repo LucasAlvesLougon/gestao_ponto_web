@@ -163,21 +163,10 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
       {/* Data e Horário separados com teclado numérico e botão de calendário */}
       <div className="grid grid-cols-2 gap-3">
         <div className="relative" ref={calendarRef}>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] flex items-center gap-1.5">
-              <CalendarIcon className="h-3.5 w-3.5 text-[#fafafa]" />
-              <span>Data</span>
-            </label>
-            <button
-              type="button"
-              onClick={() => setIsCalendarOpen((prev) => !prev)}
-              title="Abrir calendário para escolher data"
-              className="flex items-center gap-1 text-[10px] text-[#a1a1aa] hover:text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] px-1.5 py-0.5 rounded-[8px] transition-colors cursor-pointer"
-            >
-              <CalendarIcon className="h-3 w-3 text-[#fafafa]" />
-              <span>Calendário</span>
-            </button>
-          </div>
+          <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
+            <CalendarIcon className="h-3.5 w-3.5 text-[#fafafa]" />
+            <span>Data</span>
+          </label>
           <div className="relative">
             <input
               type="text"
