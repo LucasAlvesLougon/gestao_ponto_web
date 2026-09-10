@@ -103,7 +103,44 @@ export function useAuth() {
     }
   }
 
-  const loginWithGoogle = async (googleData: { email: string; name?: string; google_id?: string }) => {
+  const processGoogleToken = async (credential: string) => {
+    setIsSubmitting(true)
+    setError(null)
+    try {
+      const response = await api.post<AuthResponse>('/auth/google', { idToken: credential })
+
+      if (response.data.initial_data) {
+        const init = response.data.initial_data
+        queryClient.setQueryData(['time-entries', init.date], {
+          date: init.date,
+          timezone: init.timezone,
+          next_expected_type: init.next_expected_type,
+          entries: init.entries,
+        })
+        queryClient.setQueryData(['summary', 'daily', init.date], {
+          summary: init.summary,
+        })
+      }
+
+      if (response.data.user?.email) {
+        localStorage.setItem('last_google_email', response.data.user.email)
+      }
+
+      saveAuthSession(response.data)
+      return response.data.user
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Falha ao se conectar com nosso Servidor via Google.'
+      setError(msg)
+      throw new Error(msg)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const loginWithGoogle = async (googleData: { email?: string; name?: string; google_id?: string; idToken?: string; credential?: string }) => {
+    if (googleData.idToken || googleData.credential) {
+      return processGoogleToken((googleData.idToken || googleData.credential)!)
+    }
     setIsSubmitting(true)
     setError(null)
     try {
@@ -120,6 +157,10 @@ export function useAuth() {
         queryClient.setQueryData(['summary', 'daily', init.date], {
           summary: init.summary,
         })
+      }
+
+      if (response.data.user?.email) {
+        localStorage.setItem('last_google_email', response.data.user.email)
       }
 
       saveAuthSession(response.data)
@@ -167,6 +208,7 @@ export function useAuth() {
     error,
     login,
     register,
+    processGoogleToken,
     loginWithGoogle,
     logout,
     updateProfile,

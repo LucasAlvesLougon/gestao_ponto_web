@@ -134,4 +134,27 @@ describe('useAuth Hook', () => {
     expect(cachedSummary).toBeDefined()
     expect(cachedSummary.summary.total_worked_formatted).toBe('04:00')
   })
+
+  it('processes Google credential and stores last_google_email', async () => {
+    const mockUser = { id: 2, name: 'Lucas Lougon', email: 'lucas@gmail.com', timezone: 'America/Sao_Paulo' }
+    ;(api.post as any).mockResolvedValueOnce({
+      data: {
+        message: 'Login com Google realizado com sucesso.',
+        user: mockUser,
+        token: 'google_token_789',
+      },
+    })
+
+    const { result } = renderHook(() => useAuth(), { wrapper })
+
+    await act(async () => {
+      await result.current.processGoogleToken('mock_credential_jwt_string')
+    })
+
+    expect(api.post).toHaveBeenCalledWith('/auth/google', { idToken: 'mock_credential_jwt_string' })
+    expect(result.current.isAuthenticated).toBe(true)
+    expect(result.current.user?.email).toBe('lucas@gmail.com')
+    expect(localStorage.getItem('last_google_email')).toBe('lucas@gmail.com')
+    expect(localStorage.getItem('gestao_ponto_token')).toBe('google_token_789')
+  })
 })

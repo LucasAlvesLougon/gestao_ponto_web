@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
+import { GoogleLogin, useGoogleOneTapLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { Button } from './button'
 import {
   AppleIcon,
@@ -16,8 +17,13 @@ import {
 import { Input } from './input'
 import { useAuth } from '@/hooks/useAuth'
 
+const GOOGLE_CLIENT_ID =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  '844495701284-qvgpkr9446kr02dki8vs29191t1p33o7.apps.googleusercontent.com'
+
 export interface AuthPageProps {
-  onLoginWithGoogle?: (data: { email: string; name?: string; google_id?: string }) => Promise<any>
+  onProcessGoogleToken?: (credential: string) => Promise<any>
+  onLoginWithGoogle?: (data: { email?: string; name?: string; google_id?: string; idToken?: string; credential?: string }) => Promise<any>
   onLoginWithEmail?: (email: string, password?: string) => Promise<any>
   onSwitchToRegister?: () => void
   error?: string | null
@@ -25,7 +31,8 @@ export interface AuthPageProps {
   appName?: string
 }
 
-export function AuthPage({
+function AuthPageContent({
+  onProcessGoogleToken,
   onLoginWithGoogle,
   onLoginWithEmail,
   onSwitchToRegister,
@@ -44,6 +51,40 @@ export function AuthPage({
 
   const error = externalError ?? localError ?? auth.error
   const isLoading = externalLoading ?? auth.isSubmitting
+
+  const lastGoogleEmail = typeof window !== 'undefined' ? (localStorage.getItem('last_google_email') || undefined) : undefined
+
+  const handleGoogleCredential = async (credential: string) => {
+    setIsGoogleLoading(true)
+    setLocalError(null)
+    try {
+      if (onProcessGoogleToken) {
+        await onProcessGoogleToken(credential)
+      } else if (onLoginWithGoogle) {
+        await onLoginWithGoogle({ idToken: credential, credential })
+      } else {
+        await auth.processGoogleToken(credential)
+      }
+    } catch (err: any) {
+      setLocalError(err.message || 'Falha ao se conectar com nosso Servidor via Google.')
+    } finally {
+      setIsGoogleLoading(false)
+    }
+  }
+
+  // Suporte a Google One Tap & Autenticação automática instantânea (igual cinerandom)
+  useGoogleOneTapLogin({
+    onSuccess: async (credentialResponse) => {
+      if (credentialResponse.credential) {
+        await handleGoogleCredential(credentialResponse.credential)
+      }
+    },
+    onError: () => {},
+    auto_select: true,
+    use_fedcm_for_button: true,
+    use_fedcm_for_prompt: true,
+    disabled: Boolean(auth.user),
+  })
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -158,8 +199,30 @@ export function AuthPage({
             </div>
           )}
 
-          {/* Botões de Login Social com Funcionalidade Google */}
-          <div className="space-y-2">
+          {/* Botões de Login Social com Funcionalidade Google (igual cinerandom) */}
+          <div className="space-y-2.5">
+            <div className="w-full flex justify-center py-1 overflow-hidden rounded-full" style={{ colorScheme: 'light' }}>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (credentialResponse.credential) {
+                    await handleGoogleCredential(credentialResponse.credential)
+                  }
+                }}
+                onError={() => {
+                  setLocalError('Login com Google cancelado ou falhou.')
+                }}
+                theme="filled_black"
+                shape="pill"
+                size="large"
+                text="continue_with"
+                width="100%"
+                auto_select={true}
+                login_hint={lastGoogleEmail}
+                use_fedcm_for_button={true}
+                use_fedcm_for_prompt={true}
+              />
+            </div>
+
             <Button
               type="button"
               size="lg"
@@ -443,3 +506,12 @@ const AuthSeparator = () => {
     </div>
   )
 }
+
+export function AuthPage(props: AuthPageProps = {}) {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthPageContent {...props} />
+    </GoogleOAuthProvider>
+  )
+}
+

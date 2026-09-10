@@ -9,7 +9,7 @@ import { useAuth } from './hooks/useAuth'
 import { Loader2 } from 'lucide-react'
 
 export default function App() {
-  const { user, isAuthenticated, isCheckingSession, isSubmitting, error, login, register, loginWithGoogle, logout, updateProfile, clearError } = useAuth()
+  const { user, isAuthenticated, isCheckingSession, isSubmitting, error, login, register, processGoogleToken, loginWithGoogle, logout, updateProfile, clearError } = useAuth()
   const [authView, setAuthView] = useState<'login' | 'register'>('login')
   const [activeTab, setActiveTab] = useState<TabType>('clock')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -60,6 +60,9 @@ export default function App() {
         </>
       ) : authView === 'login' ? (
         <AuthPage
+          onProcessGoogleToken={async (cred) => {
+            await processGoogleToken(cred)
+          }}
           onLoginWithGoogle={async (data) => {
             await loginWithGoogle(data)
           }}
