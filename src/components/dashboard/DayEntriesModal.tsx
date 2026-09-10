@@ -4,6 +4,7 @@ import type { TimeEntry, TimeEntryType } from '../../lib/types'
 import { useTimeEntries } from '../../hooks/useTimeEntries'
 import { EditEntryModal } from '../clock/EditEntryModal'
 import { ManualEntryModal } from '../clock/ManualEntryModal'
+import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
 
 interface DayEntriesModalProps {
   date: string | null // YYYY-MM-DD
@@ -32,6 +33,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
   const [isManualModalOpen, setIsManualModalOpen] = useState(false)
   const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [entryToDelete, setEntryToDelete] = useState<number | null>(null)
 
   // Formatação de data em português: ex: 10/09/2026 (Quinta-feira)
   const [year, month, day] = date.split('-').map(Number)
@@ -63,13 +65,14 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
     },
   }
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Tem certeza que deseja remover esta batida de ponto?')) {
-      setDeletingId(id)
+  const handleDeleteConfirm = async () => {
+    if (entryToDelete !== null) {
+      setDeletingId(entryToDelete)
       try {
-        await deleteEntry(id)
+        await deleteEntry(entryToDelete)
       } finally {
         setDeletingId(null)
+        setEntryToDelete(null)
       }
     }
   }
@@ -206,7 +209,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                           <Edit3 className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(entry.id)}
+                          onClick={() => setEntryToDelete(entry.id)}
                           disabled={deletingId === entry.id || isDeleting}
                           title="Excluir marcação"
                           aria-label="Excluir marcação"
@@ -233,6 +236,20 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Modal de Confirmação de Exclusão */}
+      <DeleteConfirmationDialog
+        open={entryToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setEntryToDelete(null)
+        }}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deletingId !== null}
+        title="Tem certeza?"
+        description="Você tem certeza que deseja remover esta batida de ponto? Esta ação não poderá ser desfeita."
+        confirmText="Sim, Excluir"
+        cancelText="Não"
+      />
 
       {/* Modal de Registro Manual para esta data */}
       <ManualEntryModal

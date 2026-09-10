@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Play, Coffee, ArrowLeft, LogOut, Edit3, Trash2, Clock, AlertTriangle } from 'lucide-react'
 import type { TimeEntry } from '../../lib/types'
 import { EditEntryModal } from './EditEntryModal'
+import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
 
 interface DailyEntriesListProps {
   entries: TimeEntry[]
@@ -25,6 +26,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
 }) => {
   const [selectedEntry, setSelectedEntry] = useState<TimeEntry | null>(null)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [entryToDelete, setEntryToDelete] = useState<number | null>(null)
 
   const dateFormatted = selectedDate ? selectedDate.split('-').reverse().join('/') : null
   const todayStr = new Intl.DateTimeFormat('sv-SE', { timeZone: timezone }).format(new Date())
@@ -53,13 +55,14 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
     },
   }
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Tem certeza que deseja remover esta marcação de ponto?')) {
-      setDeletingId(id)
+  const handleDeleteConfirm = async () => {
+    if (entryToDelete !== null) {
+      setDeletingId(entryToDelete)
       try {
-        await onDelete(id)
+        await onDelete(entryToDelete)
       } finally {
         setDeletingId(null)
+        setEntryToDelete(null)
       }
     }
   }
@@ -159,7 +162,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     <Edit3 className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(entry.id)}
+                    onClick={() => setEntryToDelete(entry.id)}
                     disabled={deletingId === entry.id}
                     title="Excluir marcação"
                     aria-label="Excluir marcação"
@@ -180,6 +183,20 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
         onClose={() => setSelectedEntry(null)}
         onSave={onUpdate}
         isSaving={isUpdating}
+      />
+
+      {/* Modal de Confirmação de Exclusão */}
+      <DeleteConfirmationDialog
+        open={entryToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setEntryToDelete(null)
+        }}
+        onConfirm={handleDeleteConfirm}
+        isLoading={deletingId !== null}
+        title="Tem certeza?"
+        description="Você tem certeza que deseja remover esta marcação de ponto? Esta ação não poderá ser desfeita."
+        confirmText="Sim, Excluir"
+        cancelText="Não"
       />
     </div>
   )
