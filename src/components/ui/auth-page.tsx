@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
 import { GoogleLogin, useGoogleOneTapLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { Button } from './button'
 import {
@@ -444,23 +443,12 @@ function FloatingPaths({ position }: { position: number }) {
       >
         <title>Background Paths</title>
         {paths.map((path) => (
-          <motion.path
+          <path
             key={path.id}
             d={path.d}
             stroke="currentColor"
             strokeWidth={path.width}
-            strokeOpacity={0.1 + path.id * 0.03}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: 20 + Math.random() * 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
-            }}
+            strokeOpacity={0.06 + path.id * 0.015}
           />
         ))}
       </svg>
