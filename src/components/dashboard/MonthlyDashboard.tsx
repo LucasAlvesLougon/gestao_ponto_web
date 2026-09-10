@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { Calendar, ChevronLeft, ChevronRight, Clock, Target, TrendingUp, TrendingDown, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Clock, Target, TrendingUp, TrendingDown, CheckCircle2, AlertCircle, Edit3 } from 'lucide-react'
 import { useMonthlySummary } from '../../hooks/useSummary'
 import { ExportButtons } from './ExportButtons'
+import { DayEntriesModal } from './DayEntriesModal'
 
 export const MonthlyDashboard: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(() => {
     return new Date().toISOString().slice(0, 7) // YYYY-MM
   })
+  const [selectedDateForModal, setSelectedDateForModal] = useState<string | null>(null)
 
   const { data, isLoading } = useMonthlySummary(selectedMonth)
   const summary = data?.summary
@@ -162,7 +164,8 @@ export const MonthlyDashboard: React.FC = () => {
                   <th className="pb-3">Horas Trabalhadas</th>
                   <th className="pb-3">Meta</th>
                   <th className="pb-3">Saldo</th>
-                  <th className="pb-3 pr-2 text-right">Status</th>
+                  <th className="pb-3 text-center">Status</th>
+                  <th className="pb-3 pr-2 text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
@@ -193,7 +196,7 @@ export const MonthlyDashboard: React.FC = () => {
                           {day.balance_formatted}
                         </span>
                       </td>
-                      <td className="py-3.5 pr-2 text-right">
+                      <td className="py-3.5 text-center">
                         {day.is_complete ? (
                           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -206,6 +209,16 @@ export const MonthlyDashboard: React.FC = () => {
                           </span>
                         )}
                       </td>
+                      <td className="py-3.5 pr-2 text-right">
+                        <button
+                          onClick={() => setSelectedDateForModal(day.date)}
+                          title={`Visualizar e editar marcações de ${dateFormatted}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-400 hover:text-blue-300 bg-blue-950/40 hover:bg-blue-900/50 border border-blue-800/60 transition-colors cursor-pointer"
+                        >
+                          <Edit3 className="h-3.5 w-3.5" />
+                          <span>Editar Dia</span>
+                        </button>
+                      </td>
                     </tr>
                   )
                 })}
@@ -214,6 +227,13 @@ export const MonthlyDashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modal para visualizar e editar detalhamentos do dia selecionado */}
+      <DayEntriesModal
+        date={selectedDateForModal}
+        isOpen={!!selectedDateForModal}
+        onClose={() => setSelectedDateForModal(null)}
+      />
     </div>
   )
 }

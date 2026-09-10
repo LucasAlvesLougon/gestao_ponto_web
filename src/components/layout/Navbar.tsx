@@ -1,7 +1,6 @@
 import React from 'react'
-import { LogOut, User as UserIcon, Clock, CalendarDays, Settings, Moon, Sun } from 'lucide-react'
+import { LogOut, User as UserIcon, Clock, CalendarDays, Settings } from 'lucide-react'
 import type { User } from '../../lib/types'
-import { useTheme } from '../../context/ThemeContext'
 
 export type TabType = 'clock' | 'monthly'
 
@@ -20,7 +19,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSettings,
   onLogout,
 }) => {
-  const { theme, toggleTheme } = useTheme()
 
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 transition-colors">
@@ -73,15 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Botão de Alternar Modo Escuro / Claro */}
-          <button
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
-            aria-label="Alternar tema"
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+          {/* Configurações e Logout */}
 
           <button
             onClick={onOpenSettings}

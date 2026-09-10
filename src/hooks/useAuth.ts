@@ -10,12 +10,18 @@ export function useAuth() {
   const [token, setToken] = useState<string | null>(() => {
     return localStorage.getItem('gestao_ponto_token')
   })
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  // Se já temos token e usuário no cache, NÃO bloqueia a tela! O carregamento é instantâneo (0ms).
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    const tok = localStorage.getItem('gestao_ponto_token')
+    const usr = localStorage.getItem('gestao_ponto_user')
+    return Boolean(tok && !usr)
+  })
   const [error, setError] = useState<string | null>(null)
 
-  // Verify active session on startup
+  // Validação silenciosa de sessão em background no mount inicial (Stale-While-Revalidate)
   useEffect(() => {
-    if (token) {
+    const initialToken = localStorage.getItem('gestao_ponto_token')
+    if (initialToken) {
       api.get<{ user: User }>('/auth/me')
         .then((res) => {
           setUser(res.data.user)
@@ -30,7 +36,7 @@ export function useAuth() {
     } else {
       setIsLoading(false)
     }
-  }, [token])
+  }, []) // Apenas no primeiro mount da aplicação!
 
   const saveAuthSession = (authData: AuthResponse) => {
     setUser(authData.user)

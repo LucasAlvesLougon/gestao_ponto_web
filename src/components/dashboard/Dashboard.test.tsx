@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { DailySummaryCard } from './DailySummaryCard'
 import { MonthlyDashboard } from './MonthlyDashboard'
+import { DayEntriesModal } from './DayEntriesModal'
 import type { DailySummary } from '../../lib/types'
 
 const queryClient = new QueryClient()
@@ -44,4 +45,20 @@ describe('Dashboard Components', () => {
     expect(screen.getByText('Saldo do Mês')).toBeDefined()
     expect(screen.getByText('Detalhamento por Dia')).toBeDefined()
   })
+
+  it('renders DayEntriesModal when open with header and action buttons', () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <DayEntriesModal
+          date="2026-09-10"
+          isOpen={true}
+          onClose={() => {}}
+        />
+      </QueryClientProvider>
+    )
+
+    expect(screen.getByText(/Detalhamento do Dia/i)).toBeDefined()
+    expect(screen.getByText('Adicionar Batida')).toBeDefined()
+  })
 })
+

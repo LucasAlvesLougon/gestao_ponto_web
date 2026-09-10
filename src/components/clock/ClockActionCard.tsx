@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Clock, Play, Coffee, ArrowLeft, LogOut, Loader2, Calendar, CalendarClock, X, Check } from 'lucide-react'
+import { Clock, Play, Coffee, ArrowLeft, LogOut, Loader2, Calendar, CalendarClock } from 'lucide-react'
 import type { TimeEntryType } from '../../lib/types'
+import { ManualEntryModal } from './ManualEntryModal'
 
 interface ClockActionCardProps {
   nextExpectedType: TimeEntryType
@@ -18,14 +19,7 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
   const [currentTime, setCurrentTime] = useState<string>('')
   const [currentDateFormatted, setCurrentDateFormatted] = useState<string>('')
   const [showManualModal, setShowManualModal] = useState(false)
-  const [manualType, setManualType] = useState<TimeEntryType>(nextExpectedType)
-  const [manualTime, setManualTime] = useState('')
   const [actionError, setActionError] = useState<string | null>(null)
-
-  // Keep manualType in sync when nextExpectedType changes
-  useEffect(() => {
-    setManualType(nextExpectedType)
-  }, [nextExpectedType])
 
   // Atualizar relógio em tempo real a cada segundo
   useEffect(() => {
@@ -115,29 +109,8 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
   }
 
   const handleOpenManual = () => {
-    // Pré-carrega data e hora atual no formato YYYY-MM-DDTHH:mm
-    const now = new Date()
-    const offset = now.getTimezoneOffset()
-    const localDate = new Date(now.getTime() - offset * 60 * 1000)
-    setManualTime(localDate.toISOString().slice(0, 16))
-    setManualType(nextExpectedType)
     setShowManualModal(true)
     setActionError(null)
-  }
-
-  const handleManualRecord = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!manualTime) return
-    setActionError(null)
-
-    try {
-      await onRecord(manualType, manualTime)
-      setShowManualModal(false)
-      setManualTime('')
-    } catch (err: any) {
-      const msg = err.response?.data?.message || err.response?.data?.errors?.type?.[0] || 'Erro ao registrar ponto retroativo.'
-      setActionError(msg)
-    }
   }
 
   return (
@@ -231,83 +204,14 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
         </div>
       )}
 
-      {/* Painel Expansível de Registro Manual */}
-      {showManualModal && (
-        <div className="mt-6 p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border-2 border-blue-200 dark:border-blue-900/60 text-left animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <CalendarClock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                Registrar Ponto Manualmente
-              </h4>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowManualModal(false)}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-            Selecione o tipo de marcação e defina a data/hora exata que deseja registrar:
-          </p>
-
-          <form onSubmit={handleManualRecord} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Tipo de Ponto */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Tipo de Registro
-                </label>
-                <select
-                  value={manualType}
-                  onChange={(e) => setManualType(e.target.value as TimeEntryType)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-semibold"
-                >
-                  <option value="CLOCK_IN">Entrada</option>
-                  <option value="BREAK_START">Início de Intervalo</option>
-                  <option value="BREAK_END">Retorno de Intervalo</option>
-                  <option value="CLOCK_OUT">Saída</option>
-                </select>
-              </div>
-
-              {/* Data e Hora */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  Data e Horário
-                </label>
-                <input
-                  type="datetime-local"
-                  required
-                  value={manualTime}
-                  onChange={(e) => setManualTime(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowManualModal(false)}
-                className="py-2.5 px-4 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={isRecording}
-                className="py-2.5 px-5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-blue-600/20 cursor-pointer disabled:opacity-70"
-              >
-                <Check className="h-4 w-4" />
-                <span>Salvar Marcação Manual</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Modal Moderno com 4 Layers e Data/Hora Numéricas */}
+      <ManualEntryModal
+        isOpen={showManualModal}
+        onClose={() => setShowManualModal(false)}
+        onSave={(type, customTime) => onRecord(type, customTime)}
+        initialType={nextExpectedType}
+        isSaving={isRecording}
+      />
     </div>
   )
 }
