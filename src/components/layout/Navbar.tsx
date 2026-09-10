@@ -1,6 +1,7 @@
 import React from 'react'
 import { LogOut, User as UserIcon, Clock, CalendarDays, Settings } from 'lucide-react'
 import type { User } from '../../lib/types'
+import { formatUserName } from '../../lib/formatters'
 
 export type TabType = 'clock' | 'monthly'
 
@@ -19,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSettings,
   onLogout,
 }) => {
+  const formattedName = formatUserName(user.name)
+  const initialLetter = formattedName.charAt(0).toUpperCase()
 
   return (
     <header className="w-full bg-[#121214] border-b border-[#27272a] sticky top-0 z-20">
@@ -63,12 +66,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Ações Direitas: Usuário, Configurações e Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[18px] bg-[#1c1c20] border border-[#27272a]">
-            <UserIcon className="h-3.5 w-3.5 text-[#a1a1aa]" />
-            <div className="text-left">
-              <p className="text-xs font-medium text-[#fafafa] leading-tight">{user.name}</p>
-              <p className="text-[10px] text-[#a1a1aa] leading-tight">{user.timezone}</p>
+          {/* Badge de Usuário Lapidada (Sem região e com inicial em caixa alta) */}
+          <div className="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-[18px] bg-[#1c1c20] border border-[#27272a]">
+            <div className="w-5 h-5 rounded-full bg-[#27272a] border border-[#3f3f46] text-[#fafafa] flex items-center justify-center text-[10px] font-semibold shrink-0 select-none">
+              {initialLetter || <UserIcon className="h-3 w-3 text-[#a1a1aa]" />}
             </div>
+            <span className="text-xs font-medium text-[#fafafa] tracking-[-0.01em] max-w-[160px] truncate">
+              {formattedName}
+            </span>
           </div>
 
           <button

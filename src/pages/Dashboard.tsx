@@ -7,6 +7,7 @@ import { ClockActionCard } from '../components/clock/ClockActionCard'
 import { DailyEntriesList } from '../components/clock/DailyEntriesList'
 import { DailySummaryCard } from '../components/dashboard/DailySummaryCard'
 import { getLocalDateString, formatDateBR, addDays } from '../lib/dateUtils'
+import { formatUserName } from '../lib/formatters'
 
 interface DashboardProps {
   user: User
@@ -52,7 +53,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* Top Banner com Saudação e Seletor de Data */}
       <div className="bg-[#121214] p-5 sm:p-6 rounded-[24px] border border-[#27272a] card-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-[#fafafa] tracking-tight">Olá, {user.name}</h2>
+          <h2 className="text-xl font-semibold text-[#fafafa] tracking-tight">
+            Olá, {formatUserName(user.name)}
+          </h2>
           <p className="text-sm text-[#a1a1aa] mt-0.5">
             Fuso horário: <span className="font-medium text-[#fafafa]">{user.timezone}</span>
           </p>
@@ -101,6 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onRecord={(type, customTime) => recordEntry({ type, customTime })}
           isRecording={isRecording}
           timezone={timezone}
+          entries={entries}
         />
       )}
 

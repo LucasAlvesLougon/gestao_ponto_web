@@ -25,6 +25,65 @@ describe('Clock Components', () => {
     expect(handleRecord).toHaveBeenCalledWith('CLOCK_IN')
   })
 
+  it('renders ClockActionCard with Em Expediente status when in work shift', () => {
+    render(
+      <ClockActionCard
+        nextExpectedType="BREAK_START"
+        onRecord={vi.fn()}
+        isRecording={false}
+        timezone="America/Sao_Paulo"
+      />
+    )
+
+    expect(screen.getByText('Status: Em Expediente')).toBeDefined()
+    expect(screen.getByText('Iniciar Intervalo')).toBeDefined()
+  })
+
+  it('renders ClockActionCard with Em Intervalo status during break', () => {
+    render(
+      <ClockActionCard
+        nextExpectedType="BREAK_END"
+        onRecord={vi.fn()}
+        isRecording={false}
+        timezone="America/Sao_Paulo"
+      />
+    )
+
+    expect(screen.getByText('Status: Em Intervalo')).toBeDefined()
+    expect(screen.getByText('Retornar do Intervalo')).toBeDefined()
+  })
+
+  it('renders ClockActionCard with Expediente Finalizado status when shift ended', () => {
+    const entries: TimeEntry[] = [
+      {
+        id: 1,
+        user_id: 1,
+        type: 'CLOCK_IN',
+        registered_at: '2026-09-10T08:00:00.000Z',
+        is_edited: false,
+      },
+      {
+        id: 2,
+        user_id: 1,
+        type: 'CLOCK_OUT',
+        registered_at: '2026-09-10T17:00:00.000Z',
+        is_edited: false,
+      },
+    ]
+
+    render(
+      <ClockActionCard
+        nextExpectedType="CLOCK_IN"
+        onRecord={vi.fn()}
+        isRecording={false}
+        timezone="America/Sao_Paulo"
+        entries={entries}
+      />
+    )
+
+    expect(screen.getByText('Status: Expediente Finalizado')).toBeDefined()
+  })
+
   it('renders DailyEntriesList with entries and edited badge', () => {
     const entries: TimeEntry[] = [
       {

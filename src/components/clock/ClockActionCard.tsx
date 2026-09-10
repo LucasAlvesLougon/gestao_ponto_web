@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Clock, Play, Coffee, ArrowLeft, LogOut, Loader2, Calendar, CalendarClock } from 'lucide-react'
-import type { TimeEntryType } from '../../lib/types'
+import type { TimeEntry, TimeEntryType } from '../../lib/types'
 import { ManualEntryModal } from './ManualEntryModal'
 
 interface ClockActionCardProps {
@@ -8,6 +8,7 @@ interface ClockActionCardProps {
   onRecord: (type?: TimeEntryType, customTime?: string) => Promise<any>
   isRecording: boolean
   timezone: string
+  entries?: TimeEntry[]
 }
 
 export const ClockActionCard: React.FC<ClockActionCardProps> = ({
@@ -15,6 +16,7 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
   onRecord,
   isRecording,
   timezone,
+  entries = [],
 }) => {
   const [currentTime, setCurrentTime] = useState<string>('')
   const [currentDateFormatted, setCurrentDateFormatted] = useState<string>('')
@@ -54,36 +56,77 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
     return () => clearInterval(interval)
   }, [timezone])
 
+  // Determinação do status de expediente e estilo com cores contidas (sóbrias, não neon)
+  const isShiftFinished = entries.length > 0 && entries[entries.length - 1].type === 'CLOCK_OUT'
+
+  const statusConfig = (() => {
+    if (isShiftFinished) {
+      return {
+        label: 'Expediente Finalizado',
+        badgeClass: 'bg-[#18192c] text-[#a5b4fc] border-[#2d3056]',
+        dotClass: 'bg-[#818cf8]',
+        pulse: false,
+      }
+    }
+
+    switch (nextExpectedType) {
+      case 'CLOCK_IN':
+        return {
+          label: 'Fora de Expediente',
+          badgeClass: 'bg-[#1c1c20] text-[#a1a1aa] border-[#27272a]',
+          dotClass: 'bg-[#71717a]',
+          pulse: false,
+        }
+      case 'BREAK_START':
+      case 'CLOCK_OUT':
+        return {
+          label: 'Em Expediente',
+          badgeClass: 'bg-[#0d2818] text-[#6ee7b7] border-[#1b4d32]',
+          dotClass: 'bg-[#34d399]',
+          pulse: true,
+        }
+      case 'BREAK_END':
+        return {
+          label: 'Em Intervalo',
+          badgeClass: 'bg-[#2a1a0c] text-[#fcd34d] border-[#5e3814]',
+          dotClass: 'bg-[#f59e0b]',
+          pulse: false,
+        }
+      default:
+        return {
+          label: 'Aguardando',
+          badgeClass: 'bg-[#1c1c20] text-[#a1a1aa] border-[#27272a]',
+          dotClass: 'bg-[#71717a]',
+          pulse: false,
+        }
+    }
+  })()
+
   const actionConfig = {
     CLOCK_IN: {
       label: 'Registrar Entrada',
       sublabel: 'Iniciar expediente de trabalho',
       icon: Play,
-      statusBadge: 'Fora de Expediente',
     },
     BREAK_START: {
       label: 'Iniciar Intervalo',
       sublabel: 'Pausa para almoço ou descanso',
       icon: Coffee,
-      statusBadge: 'Em Expediente',
     },
     BREAK_END: {
       label: 'Retornar do Intervalo',
       sublabel: 'Retomar as atividades de trabalho',
       icon: ArrowLeft,
-      statusBadge: 'Em Intervalo',
     },
     CLOCK_OUT: {
       label: 'Registrar Saída',
       sublabel: 'Finalizar expediente do dia',
       icon: LogOut,
-      statusBadge: 'Em Expediente',
     },
   }[nextExpectedType] || {
     label: 'Bater Ponto',
     sublabel: 'Registrar marcação',
     icon: Clock,
-    statusBadge: 'Aguardando',
   }
 
   const IconComponent = actionConfig.icon
@@ -106,11 +149,20 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
   return (
     <div className="bg-[#121214] rounded-[24px] p-6 sm:p-8 border border-[#27272a] card-shadow relative overflow-hidden">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-0">
-        {/* Lado Esquerdo: Relógio Digital e Status */}
+        {/* Lado Esquerdo: Relógio Digital e Status com Cores Contidas */}
         <div className="text-center lg:text-left space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[18px] text-xs font-medium bg-[#1c1c20] text-[#a1a1aa] border border-[#27272a]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#fafafa]" />
-            Status: {actionConfig.statusBadge}
+          <div
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-[18px] text-xs font-medium border transition-colors ${statusConfig.badgeClass}`}
+          >
+            <span className="relative flex h-2 w-2 shrink-0">
+              {statusConfig.pulse && (
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-60 ${statusConfig.dotClass}`}
+                />
+              )}
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${statusConfig.dotClass}`} />
+            </span>
+            <span>Status: {statusConfig.label}</span>
           </div>
 
           <div className="text-5xl sm:text-6xl font-semibold text-[#fafafa] tracking-tight font-mono">
