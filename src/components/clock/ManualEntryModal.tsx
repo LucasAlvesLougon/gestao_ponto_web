@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { X, Play, Coffee, ArrowLeft, LogOut, Check, Calendar, Clock, Loader2, Sparkles } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { X, Play, Coffee, ArrowLeft, LogOut, Check, Calendar as CalendarIcon, Clock, Loader2, Sparkles } from 'lucide-react'
 import type { TimeEntryType } from '../../lib/types'
+import { Calendar } from '@/components/ui/calendar'
 
 interface ManualEntryModalProps {
   isOpen: boolean
@@ -120,6 +121,38 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   const [timeInput, setTimeInput] = useState(getInitialTimeStr)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isCalendarOpen) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setIsCalendarOpen(false)
+      }
+    }
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsCalendarOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEsc)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEsc)
+    }
+  }, [isCalendarOpen])
+
+  const parseDateFromInput = (str: string): Date | undefined => {
+    const parts = str.split('/')
+    if (parts.length === 3 && parts[2]?.length === 4) {
+      const d = parseInt(parts[0], 10)
+      const m = parseInt(parts[1], 10) - 1
+      const y = parseInt(parts[2], 10)
+      const parsed = new Date(y, m, d)
+      if (!isNaN(parsed.getTime())) return parsed
+    }
+    return undefined
+  }
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInput(formatNumericDate(e.target.value))
@@ -300,25 +333,73 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
 
           {/* CAMPOS SEPARADOS: DATA E HORÁRIO COM EDIÇÃO NUMÉRICA */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Campo 1: Data */}
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-[#fafafa]" />
-                Data (DD/MM/AAAA)
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                required
-                value={dateInput}
-                onChange={handleDateChange}
-                onBlur={handleDateBlur}
-                placeholder="DD/MM/AAAA"
-                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
-              />
+            {/* Campo 1: Data com Teclado e Botão de Calendário */}
+            <div className="relative" ref={calendarRef}>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] flex items-center gap-1.5">
+                  <CalendarIcon className="h-4 w-4 text-[#fafafa]" />
+                  <span>Data (DD/MM/AAAA)</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsCalendarOpen((prev) => !prev)}
+                  title="Abrir calendário para escolher data"
+                  className="flex items-center gap-1 text-[11px] text-[#a1a1aa] hover:text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] px-2 py-0.5 rounded-[10px] transition-colors cursor-pointer"
+                >
+                  <CalendarIcon className="h-3.5 w-3.5 text-[#fafafa]" />
+                  <span>Calendário</span>
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  required
+                  value={dateInput}
+                  onChange={handleDateChange}
+                  onBlur={handleDateBlur}
+                  placeholder="DD/MM/AAAA"
+                  className="w-full pl-3.5 pr-10 py-2.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsCalendarOpen((prev) => !prev)}
+                  title="Abrir calendário"
+                  className="absolute right-3 top-2.5 text-[#a1a1aa] hover:text-[#fafafa] p-1 rounded-[8px] transition-colors cursor-pointer"
+                >
+                  <CalendarIcon className="h-4 w-4" />
+                </button>
+              </div>
               <span className="text-[10px] text-[#a1a1aa] mt-1 block">
-                Insira apenas números (ex: 10092026)
+                Insira apenas números (ex: 10092026) ou selecione no calendário
               </span>
+
+              {/* Componente de Calendário solicitado */}
+              {isCalendarOpen && (
+                <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <Calendar
+                    mode="single"
+                    selected={parseDateFromInput(dateInput)}
+                    onSelect={(selectedDate) => {
+                      if (selectedDate) {
+                        const dayStr = String(selectedDate.getDate()).padStart(2, '0')
+                        const monthStr = String(selectedDate.getMonth() + 1).padStart(2, '0')
+                        const yearStr = selectedDate.getFullYear()
+                        setDateInput(`${dayStr}/${monthStr}/${yearStr}`)
+                        setIsCalendarOpen(false)
+                        setSuccessMsg(null)
+                      }
+                    }}
+                    className="rounded-lg border"
+                    captionLayout="dropdown"
+                    disabled={(d) => {
+                      const today = new Date()
+                      today.setHours(23, 59, 59, 999)
+                      return d > today
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Campo 2: Horário */}

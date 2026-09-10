@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { X, Loader2, AlertCircle, Calendar, Clock } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { X, Loader2, AlertCircle, Calendar as CalendarIcon, Clock } from 'lucide-react'
 import type { TimeEntry } from '../../lib/types'
+import { Calendar } from '@/components/ui/calendar'
 import {
   formatNumericDate,
   autoCorrectDate,
@@ -38,6 +39,38 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
     return `${pad(entryDate.getHours())}:${pad(entryDate.getMinutes())}`
   })
   const [error, setError] = useState<string | null>(null)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isCalendarOpen) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setIsCalendarOpen(false)
+      }
+    }
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsCalendarOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEsc)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEsc)
+    }
+  }, [isCalendarOpen])
+
+  const parseDateFromInput = (str: string): Date | undefined => {
+    const parts = str.split('/')
+    if (parts.length === 3 && parts[2]?.length === 4) {
+      const d = parseInt(parts[0], 10)
+      const m = parseInt(parts[1], 10) - 1
+      const y = parseInt(parts[2], 10)
+      const parsed = new Date(y, m, d)
+      if (!isNaN(parsed.getTime())) return parsed
+    }
+    return undefined
+  }
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInput(formatNumericDate(e.target.value))
@@ -127,25 +160,72 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
         </div>
       </div>
 
-      {/* Data e Horário separados com teclado numérico */}
+      {/* Data e Horário separados com teclado numérico e botão de calendário */}
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5 text-[#fafafa]" />
-            <span>Data</span>
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            value={dateInput}
-            onChange={handleDateChange}
-            onBlur={handleDateBlur}
-            placeholder="DD/MM/AAAA"
-            maxLength={10}
-            required
-            className="w-full px-3.5 py-2 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
-          />
+        <div className="relative" ref={calendarRef}>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] flex items-center gap-1.5">
+              <CalendarIcon className="h-3.5 w-3.5 text-[#fafafa]" />
+              <span>Data</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setIsCalendarOpen((prev) => !prev)}
+              title="Abrir calendário para escolher data"
+              className="flex items-center gap-1 text-[10px] text-[#a1a1aa] hover:text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] px-1.5 py-0.5 rounded-[8px] transition-colors cursor-pointer"
+            >
+              <CalendarIcon className="h-3 w-3 text-[#fafafa]" />
+              <span>Calendário</span>
+            </button>
+          </div>
+          <div className="relative">
+            <input
+              type="text"
+              inputMode="numeric"
+              value={dateInput}
+              onChange={handleDateChange}
+              onBlur={handleDateBlur}
+              placeholder="DD/MM/AAAA"
+              maxLength={10}
+              required
+              className="w-full pl-3.5 pr-9 py-2 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
+            />
+            <button
+              type="button"
+              onClick={() => setIsCalendarOpen((prev) => !prev)}
+              title="Abrir calendário"
+              className="absolute right-2.5 top-2 text-[#a1a1aa] hover:text-[#fafafa] p-1 rounded-[8px] transition-colors cursor-pointer"
+            >
+              <CalendarIcon className="h-3.5 w-3.5" />
+            </button>
+          </div>
           <span className="text-[10px] text-[#a1a1aa] mt-1 block">Apenas números</span>
+
+          {/* Componente de Calendário solicitado */}
+          {isCalendarOpen && (
+            <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <Calendar
+                mode="single"
+                selected={parseDateFromInput(dateInput)}
+                onSelect={(selectedDate) => {
+                  if (selectedDate) {
+                    const dayStr = String(selectedDate.getDate()).padStart(2, '0')
+                    const monthStr = String(selectedDate.getMonth() + 1).padStart(2, '0')
+                    const yearStr = selectedDate.getFullYear()
+                    setDateInput(`${dayStr}/${monthStr}/${yearStr}`)
+                    setIsCalendarOpen(false)
+                  }
+                }}
+                className="rounded-lg border"
+                captionLayout="dropdown"
+                disabled={(d) => {
+                  const today = new Date()
+                  today.setHours(23, 59, 59, 999)
+                  return d > today
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div>
