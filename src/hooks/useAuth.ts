@@ -103,6 +103,36 @@ export function useAuth() {
     }
   }
 
+  const loginWithGoogle = async (googleData: { email: string; name?: string; google_id?: string }) => {
+    setIsSubmitting(true)
+    setError(null)
+    try {
+      const response = await api.post<AuthResponse>('/auth/google', googleData)
+
+      if (response.data.initial_data) {
+        const init = response.data.initial_data
+        queryClient.setQueryData(['time-entries', init.date], {
+          date: init.date,
+          timezone: init.timezone,
+          next_expected_type: init.next_expected_type,
+          entries: init.entries,
+        })
+        queryClient.setQueryData(['summary', 'daily', init.date], {
+          summary: init.summary,
+        })
+      }
+
+      saveAuthSession(response.data)
+      return response.data.user
+    } catch (err: any) {
+      const msg = err.response?.data?.message || 'Erro ao realizar login com Google.'
+      setError(msg)
+      throw new Error(msg)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   // Logout otimista instantâneo (0ms de latência percebida)
   const logout = () => {
     const currentToken = token || localStorage.getItem('gestao_ponto_token')
@@ -137,6 +167,7 @@ export function useAuth() {
     error,
     login,
     register,
+    loginWithGoogle,
     logout,
     updateProfile,
     clearError: () => setError(null),

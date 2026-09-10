@@ -12,7 +12,7 @@ describe('App Component', () => {
         <App />
       </QueryClientProvider>
     )
-    expect(screen.getByText('Gestão de Ponto')).toBeDefined()
+    expect(screen.getAllByText(/Gestão de Ponto/i)[0]).toBeDefined()
     expect(screen.getByRole('button', { name: /Entrar no Sistema/i })).toBeDefined()
   })
 })

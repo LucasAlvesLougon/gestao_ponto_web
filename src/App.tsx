@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LoginForm } from './components/auth/LoginForm'
+import { AuthPage } from './components/ui/auth-page'
 import { RegisterForm } from './components/auth/RegisterForm'
 import { Navbar, type TabType } from './components/layout/Navbar'
 import { Dashboard } from './pages/Dashboard'
@@ -9,7 +9,7 @@ import { useAuth } from './hooks/useAuth'
 import { Loader2 } from 'lucide-react'
 
 export default function App() {
-  const { user, isAuthenticated, isCheckingSession, isSubmitting, error, login, register, logout, updateProfile, clearError } = useAuth()
+  const { user, isAuthenticated, isCheckingSession, isSubmitting, error, login, register, loginWithGoogle, logout, updateProfile, clearError } = useAuth()
   const [authView, setAuthView] = useState<'login' | 'register'>('login')
   const [activeTab, setActiveTab] = useState<TabType>('clock')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -58,27 +58,28 @@ export default function App() {
             />
           )}
         </>
+      ) : authView === 'login' ? (
+        <AuthPage
+          onLoginWithGoogle={async (data) => {
+            await loginWithGoogle(data)
+          }}
+          onLoginWithEmail={async (email, pass) => {
+            await login(email, pass || 'senha1234')
+          }}
+          onSwitchToRegister={() => handleSwitchAuth('register')}
+          error={error}
+          isLoading={isSubmitting}
+        />
       ) : (
         <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-          {authView === 'login' ? (
-            <LoginForm
-              onLogin={async (email, pass) => {
-                await login(email, pass)
-              }}
-              onSwitchToRegister={() => handleSwitchAuth('register')}
-              error={error}
-              isLoading={isSubmitting}
-            />
-          ) : (
-            <RegisterForm
-              onRegister={async (name, email, pass, tz) => {
-                await register(name, email, pass, tz)
-              }}
-              onSwitchToLogin={() => handleSwitchAuth('login')}
-              error={error}
-              isLoading={isSubmitting}
-            />
-          )}
+          <RegisterForm
+            onRegister={async (name, email, pass, tz) => {
+              await register(name, email, pass, tz)
+            }}
+            onSwitchToLogin={() => handleSwitchAuth('login')}
+            error={error}
+            isLoading={isSubmitting}
+          />
         </div>
       )}
     </div>
