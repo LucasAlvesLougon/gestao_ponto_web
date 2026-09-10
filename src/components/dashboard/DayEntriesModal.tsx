@@ -85,40 +85,40 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-        <div className="bg-[#ffffff] w-full max-w-2xl rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden flex flex-col max-h-[90vh] text-[#0a0a0a]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+        <div className="bg-[#121214] w-full max-w-2xl rounded-[24px] card-shadow border border-[#27272a] overflow-hidden flex flex-col max-h-[90vh] text-[#fafafa]">
           {/* Header */}
-          <div className="px-6 py-5 border-b border-[#e5e5e5] flex items-center justify-between shrink-0">
+          <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a]">
+              <div className="p-2 rounded-[10px] bg-[#1c1c20] border border-[#27272a] text-[#fafafa]">
                 <Calendar className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">
+                <h3 className="font-semibold text-[#fafafa] text-sm tracking-tight">
                   Detalhamento do Dia — {formattedDate}
                 </h3>
-                <p className="text-xs text-[#737373] capitalize">{formattedWeekday}</p>
+                <p className="text-xs text-[#a1a1aa] capitalize">{formattedWeekday}</p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="text-[#737373] hover:text-[#0a0a0a] p-1.5 rounded-[18px] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+              className="text-[#a1a1aa] hover:text-[#fafafa] p-1.5 rounded-[18px] hover:bg-[#1c1c20] transition-colors cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Subheader / Ações Rápidas */}
-          <div className="px-6 py-3 bg-[#fafafa] border-b border-[#e5e5e5] flex items-center justify-between shrink-0">
-            <div className="text-xs text-[#737373]">
-              <span className="font-semibold text-[#0a0a0a]">{entries.length}</span>{' '}
+          <div className="px-6 py-3 bg-[#1c1c20] border-b border-[#27272a] flex items-center justify-between shrink-0">
+            <div className="text-xs text-[#a1a1aa]">
+              <span className="font-semibold text-[#fafafa]">{entries.length}</span>{' '}
               {entries.length === 1 ? 'marcação registrada' : 'marcações registradas'}
             </div>
 
             <button
               onClick={() => setIsManualModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[18px] bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[18px] bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] text-xs font-medium transition-colors cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Adicionar Batida</span>
@@ -128,22 +128,22 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
           {/* Conteúdo Principal */}
           <div className="p-6 overflow-y-auto space-y-3">
             {isLoading ? (
-              <div className="py-12 flex flex-col items-center justify-center text-[#737373] gap-2">
-                <Clock className="h-6 w-6 animate-spin text-[#0a0a0a]" />
+              <div className="py-12 flex flex-col items-center justify-center text-[#a1a1aa] gap-2">
+                <Clock className="h-6 w-6 animate-spin text-[#fafafa]" />
                 <span className="text-xs font-medium">Carregando batidas do dia...</span>
               </div>
             ) : entries.length === 0 ? (
-              <div className="py-12 text-center border border-dashed border-[#e5e5e5] rounded-[18px] bg-[#fafafa]">
-                <div className="w-10 h-10 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a] flex items-center justify-center mx-auto mb-3 text-base">
+              <div className="py-12 text-center border border-dashed border-[#27272a] rounded-[18px] bg-[#1c1c20]">
+                <div className="w-10 h-10 rounded-[10px] bg-[#27272a] border border-[#3f3f46] text-[#fafafa] flex items-center justify-center mx-auto mb-3 text-base">
                   📅
                 </div>
-                <h4 className="text-sm font-semibold text-[#0a0a0a]">Nenhum registro nesta data</h4>
-                <p className="text-xs text-[#737373] mt-1 max-w-sm mx-auto mb-4">
+                <h4 className="text-sm font-semibold text-[#fafafa]">Nenhum registro nesta data</h4>
+                <p className="text-xs text-[#a1a1aa] mt-1 max-w-sm mx-auto mb-4">
                   Você não possui batidas cadastradas para este dia. Adicione manualmente se esqueceu de registrar o ponto.
                 </p>
                 <button
                   onClick={() => setIsManualModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[18px] bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[18px] bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] text-xs font-medium transition-colors cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Cadastrar Registro Manual</span>
@@ -170,28 +170,28 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                   return (
                     <div
                       key={entry.id || idx}
-                      className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] transition-colors"
+                      className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] hover:bg-[#27272a]/70 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
+                        <div className="p-2 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
                           <Icon className="h-4 w-4" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-[#0a0a0a]">
+                            <span className="text-sm font-semibold text-[#fafafa]">
                               {details.label}
                             </span>
                             {entry.is_edited && (
                               <span
-                                className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#f5f5f5] text-[#171717] border border-[#e5e5e5]"
+                                className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]"
                               >
-                                <AlertTriangle className="h-3 w-3 text-[#737373]" />
+                                <AlertTriangle className="h-3 w-3 text-[#a1a1aa]" />
                                 Ajustado
                               </span>
                             )}
                           </div>
-                          <div className="text-xs text-[#737373] font-mono mt-0.5">
-                            Horário: <span className="font-semibold text-[#0a0a0a]">{timeStr}</span>
+                          <div className="text-xs text-[#a1a1aa] font-mono mt-0.5">
+                            Horário: <span className="font-semibold text-[#fafafa]">{timeStr}</span>
                           </div>
                         </div>
                       </div>
@@ -201,7 +201,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                           onClick={() => setEditingEntry(entry)}
                           title="Ajustar horário ou data"
                           aria-label="Ajustar horário ou data"
-                          className="p-2 text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] rounded-[18px] transition-colors cursor-pointer"
+                          className="p-2 text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-[18px] transition-colors cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
                         </button>
@@ -210,7 +210,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                           disabled={deletingId === entry.id || isDeleting}
                           title="Excluir marcação"
                           aria-label="Excluir marcação"
-                          className="p-2 text-[#737373] hover:text-[#e7000b] hover:bg-red-50 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
+                          className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -223,10 +223,10 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 border-t border-[#e5e5e5] flex items-center justify-end shrink-0">
+          <div className="px-6 py-3 border-t border-[#27272a] flex items-center justify-end shrink-0">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-medium text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] rounded-[18px] transition-colors cursor-pointer"
             >
               Fechar
             </button>

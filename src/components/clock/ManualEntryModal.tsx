@@ -223,36 +223,36 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-[#ffffff] w-full max-w-lg rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden text-[#0a0a0a]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+      <div className="bg-[#121214] w-full max-w-lg rounded-[24px] card-shadow border border-[#27272a] overflow-hidden text-[#fafafa]">
         {/* Top Header */}
-        <div className="px-6 py-5 border-b border-[#e5e5e5] flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
+            <div className="p-2 rounded-[10px] bg-[#1c1c20] text-[#fafafa] border border-[#27272a]">
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">Marcação Manual de Ponto</h3>
-              <p className="text-xs text-[#737373]">Escolha o tipo e informe data e hora pelo teclado</p>
+              <h3 className="font-semibold text-[#fafafa] text-sm tracking-tight">Marcação Manual de Ponto</h3>
+              <p className="text-xs text-[#a1a1aa]">Escolha o tipo e informe data e hora pelo teclado</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-[18px] text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+            className="p-1.5 rounded-[18px] text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#1c1c20] transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {successMsg && (
-          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#fafafa] border border-[#e5e5e5] text-[#0a0a0a] text-xs flex items-center gap-2">
-            <Check className="h-4 w-4 shrink-0 text-[#0a0a0a]" />
+          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#1c1c20] border border-[#27272a] text-[#fafafa] text-xs flex items-center gap-2">
+            <Check className="h-4 w-4 shrink-0 text-[#fafafa]" />
             <span>{successMsg}</span>
           </div>
         )}
 
         {error && (
-          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-red-50 border border-red-200 text-[#e7000b] text-xs flex items-center gap-2">
+          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#1c1c20] border border-[#ef4444]/30 text-[#ef4444] text-xs flex items-center gap-2">
             <span>⚠️</span>
             <span>{error}</span>
           </div>
@@ -261,7 +261,7 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* 4 LAYERS DE TIPOS DE REGISTRO */}
           <div>
-            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-3">
+            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-3">
               1. Selecione o Tipo de Batida (4 Layers)
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -276,19 +276,19 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                     onClick={() => setSelectedType(layer.type)}
                     className={`p-3.5 rounded-[18px] border text-left transition-colors flex items-center gap-3 cursor-pointer ${
                       isSelected
-                        ? 'border-[#0a0a0a] bg-[#fafafa] ring-1 ring-[#0a0a0a] text-[#0a0a0a]'
-                        : 'border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] text-[#0a0a0a]'
+                        ? 'border-[#fafafa] bg-[#1c1c20] ring-1 ring-[#fafafa] text-[#fafafa]'
+                        : 'border-[#27272a] bg-[#1c1c20]/60 hover:bg-[#1c1c20] text-[#fafafa]'
                     }`}
                   >
-                    <div className={`p-2 rounded-[10px] shrink-0 ${isSelected ? 'bg-[#0a0a0a] text-[#fafafa]' : 'bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]'}`}>
+                    <div className={`p-2 rounded-[10px] shrink-0 ${isSelected ? 'bg-[#fafafa] text-[#09090b]' : 'bg-[#27272a] text-[#fafafa] border border-[#3f3f46]'}`}>
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs font-semibold text-[#0a0a0a] flex items-center justify-between">
+                      <div className="text-xs font-semibold text-[#fafafa] flex items-center justify-between">
                         <span>{layer.title}</span>
-                        {isSelected && <Check className="h-4 w-4 text-[#0a0a0a]" />}
+                        {isSelected && <Check className="h-4 w-4 text-[#fafafa]" />}
                       </div>
-                      <div className="text-[11px] text-[#737373] truncate mt-0.5">
+                      <div className="text-[11px] text-[#a1a1aa] truncate mt-0.5">
                         {layer.subtitle}
                       </div>
                     </div>
@@ -302,8 +302,8 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo 1: Data */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-[#0a0a0a]" />
+              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
+                <Calendar className="h-4 w-4 text-[#fafafa]" />
                 Data (DD/MM/AAAA)
               </label>
               <input
@@ -314,17 +314,17 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                 onChange={handleDateChange}
                 onBlur={handleDateBlur}
                 placeholder="DD/MM/AAAA"
-                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
               />
-              <span className="text-[10px] text-[#737373] mt-1 block">
+              <span className="text-[10px] text-[#a1a1aa] mt-1 block">
                 Insira apenas números (ex: 10092026)
               </span>
             </div>
 
             {/* Campo 2: Horário */}
             <div>
-              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-[#0a0a0a]" />
+              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
+                <Clock className="h-4 w-4 text-[#fafafa]" />
                 Horário (HH:mm)
               </label>
               <input
@@ -335,33 +335,33 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                 onChange={handleTimeChange}
                 onBlur={handleTimeBlur}
                 placeholder="HH:mm"
-                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] focus:bg-[#27272a] text-[#fafafa] font-mono text-sm tracking-wider focus:outline-none focus:border-[#fafafa] transition-colors"
               />
-              <span className="text-[10px] text-[#737373] mt-1 block">
+              <span className="text-[10px] text-[#a1a1aa] mt-1 block">
                 Insira apenas números (ex: 0830)
               </span>
             </div>
           </div>
 
           {/* Dica de autocorreção */}
-          <div className="flex items-center gap-2 p-3 rounded-[18px] bg-[#fafafa] border border-[#e5e5e5] text-[11px] text-[#737373]">
-            <Sparkles className="h-4 w-4 text-[#0a0a0a] shrink-0" />
+          <div className="flex items-center gap-2 p-3 rounded-[18px] bg-[#1c1c20] border border-[#27272a] text-[11px] text-[#a1a1aa]">
+            <Sparkles className="h-4 w-4 text-[#fafafa] shrink-0" />
             <span>O sistema formata e autocorrige limites de dias, meses e horários automaticamente.</span>
           </div>
 
           {/* Botões de Ação */}
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#e5e5e5]">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#27272a]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-medium text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] rounded-[18px] transition-colors cursor-pointer"
             >
               {successMsg ? 'Fechar' : 'Cancelar'}
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="px-5 py-2.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               {isSaving ? (
                 <>

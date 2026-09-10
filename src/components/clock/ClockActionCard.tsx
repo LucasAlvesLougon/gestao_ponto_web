@@ -104,21 +104,21 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
   }
 
   return (
-    <div className="bg-[#ffffff] rounded-[24px] p-6 sm:p-8 border border-[#e5e5e5] card-shadow relative overflow-hidden">
+    <div className="bg-[#121214] rounded-[24px] p-6 sm:p-8 border border-[#27272a] card-shadow relative overflow-hidden">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-0">
         {/* Lado Esquerdo: Relógio Digital e Status */}
         <div className="text-center lg:text-left space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[18px] text-xs font-medium bg-[#f5f5f5] text-[#171717] border border-[#e5e5e5]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#171717]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[18px] text-xs font-medium bg-[#1c1c20] text-[#a1a1aa] border border-[#27272a]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#fafafa]" />
             Status: {actionConfig.statusBadge}
           </div>
 
-          <div className="text-5xl sm:text-6xl font-semibold text-[#0a0a0a] tracking-tight font-mono">
+          <div className="text-5xl sm:text-6xl font-semibold text-[#fafafa] tracking-tight font-mono">
             {currentTime || '--:--:--'}
           </div>
 
-          <p className="text-sm font-normal text-[#737373] flex items-center justify-center lg:justify-start gap-1.5">
-            <Calendar className="h-4 w-4 text-[#737373]" />
+          <p className="text-sm font-normal text-[#a1a1aa] flex items-center justify-center lg:justify-start gap-1.5">
+            <Calendar className="h-4 w-4 text-[#a1a1aa]" />
             {currentDateFormatted}
           </p>
         </div>
@@ -130,27 +130,27 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
             onClick={handleQuickRecord}
             disabled={isRecording}
             title="Registrar marcação instantânea com a hora atual"
-            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
           >
             {isRecording ? (
               <div className="flex items-center gap-3">
-                <Loader2 className="h-6 w-6 animate-spin text-[#fafafa]" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#09090b]" />
                 <div>
                   <div className="text-sm font-medium">Registrando...</div>
-                  <div className="text-xs text-[#737373]">Gravando horário</div>
+                  <div className="text-xs text-[#71717a]">Gravando horário</div>
                 </div>
               </div>
             ) : (
               <>
-                <div className="p-2.5 rounded-[10px] bg-[#171717] text-[#fafafa] border border-white/10 shrink-0">
+                <div className="p-2.5 rounded-[10px] bg-[#09090b] text-[#fafafa] shrink-0">
                   <IconComponent className="h-5 w-5" />
                 </div>
                 <div className="leading-tight">
-                  <div className="text-[10px] uppercase tracking-[0.05em] text-[#737373] font-medium">
+                  <div className="text-[10px] uppercase tracking-[0.05em] text-[#71717a] font-medium">
                     Tempo Real
                   </div>
-                  <div className="text-sm font-semibold text-[#fafafa]">{actionConfig.label}</div>
-                  <div className="text-xs text-[#737373] font-mono mt-0.5">
+                  <div className="text-sm font-semibold text-[#09090b]">{actionConfig.label}</div>
+                  <div className="text-xs text-[#71717a] font-mono mt-0.5">
                     Agora • {currentTime || '--:--:--'}
                   </div>
                 </div>
@@ -158,25 +158,25 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
             )}
           </button>
 
-          {/* BOTÃO 2: MARCAÇÃO MANUAL (Outline Pill) */}
+          {/* BOTÃO 2: MARCAÇÃO MANUAL (Outline / Surface Alt Pill) */}
           <button
             type="button"
             onClick={handleOpenManual}
             disabled={isRecording}
             title="Registrar marcação informando data e hora retroativa"
-            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-transparent hover:bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5] active:scale-[0.99] cursor-pointer group"
+            className="flex-1 sm:w-64 py-3.5 px-4 rounded-[18px] text-left transition-colors flex items-center gap-3.5 bg-[#1c1c20] hover:bg-[#27272a] text-[#fafafa] border border-[#27272a] active:scale-[0.99] cursor-pointer group"
           >
-            <div className="p-2.5 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5] shrink-0">
+            <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46] shrink-0">
               <CalendarClock className="h-5 w-5" />
             </div>
             <div className="leading-tight">
-              <div className="text-[10px] uppercase tracking-[0.05em] text-[#737373] font-medium">
+              <div className="text-[10px] uppercase tracking-[0.05em] text-[#a1a1aa] font-medium">
                 Opção Retroativa
               </div>
-              <div className="text-sm font-semibold text-[#0a0a0a]">
+              <div className="text-sm font-semibold text-[#fafafa]">
                 Marcação Manual
               </div>
-              <div className="text-xs text-[#737373] mt-0.5">
+              <div className="text-xs text-[#a1a1aa] mt-0.5">
                 Ajustar data & horário
               </div>
             </div>
@@ -185,7 +185,7 @@ export const ClockActionCard: React.FC<ClockActionCardProps> = ({
       </div>
 
       {actionError && (
-        <div className="mt-4 p-3 rounded-[18px] bg-red-50 border border-red-200 text-[#e7000b] text-xs flex items-center gap-2">
+        <div className="mt-4 p-3 rounded-[18px] bg-[#1c1c20] border border-[#ef4444]/30 text-[#ef4444] text-xs flex items-center gap-2">
           <span>⚠️</span>
           <span>{actionError}</span>
         </div>

@@ -65,33 +65,33 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
   }
 
   return (
-    <div className="bg-[#ffffff] rounded-[24px] p-6 border border-[#e5e5e5] card-shadow">
+    <div className="bg-[#121214] rounded-[24px] p-6 border border-[#27272a] card-shadow">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-base font-semibold text-[#0a0a0a] tracking-tight">
+          <h3 className="text-base font-semibold text-[#fafafa] tracking-tight">
             {isToday ? 'Histórico de Hoje' : `Histórico do Dia (${dateFormatted})`}
           </h3>
-          <p className="text-xs text-[#737373] mt-0.5">Todas as marcações registradas para esta jornada</p>
+          <p className="text-xs text-[#a1a1aa] mt-0.5">Todas as marcações registradas para esta jornada</p>
         </div>
-        <div className="text-xs font-medium px-2.5 py-0.5 bg-[#f5f5f5] text-[#171717] rounded-[18px] border border-[#e5e5e5]">
+        <div className="text-xs font-medium px-2.5 py-0.5 bg-[#1c1c20] text-[#fafafa] rounded-[18px] border border-[#27272a]">
           {entries.length} {entries.length === 1 ? 'registro' : 'registros'}
         </div>
       </div>
 
       {isLoading ? (
-        <div className="py-12 flex flex-col items-center justify-center text-[#737373] gap-2">
-          <Clock className="h-6 w-6 animate-spin text-[#0a0a0a]" />
+        <div className="py-12 flex flex-col items-center justify-center text-[#a1a1aa] gap-2">
+          <Clock className="h-6 w-6 animate-spin text-[#fafafa]" />
           <span className="text-xs font-medium">Carregando marcações...</span>
         </div>
       ) : entries.length === 0 ? (
-        <div className="py-12 text-center border border-dashed border-[#e5e5e5] rounded-[18px] bg-[#fafafa]">
-          <div className="w-10 h-10 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a] flex items-center justify-center mx-auto mb-3 text-base">
+        <div className="py-12 text-center border border-dashed border-[#27272a] rounded-[18px] bg-[#1c1c20]">
+          <div className="w-10 h-10 rounded-[10px] bg-[#27272a] border border-[#3f3f46] text-[#fafafa] flex items-center justify-center mx-auto mb-3 text-base">
             📅
           </div>
-          <h4 className="text-sm font-semibold text-[#0a0a0a]">
+          <h4 className="text-sm font-semibold text-[#fafafa]">
             {isToday ? 'Nenhum ponto registrado hoje' : `Nenhum ponto registrado em ${dateFormatted}`}
           </h4>
-          <p className="text-xs text-[#737373] mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-[#a1a1aa] mt-1 max-w-sm mx-auto">
             {isToday
               ? 'Utilize as opções acima para registrar sua Entrada e iniciar o acompanhamento da jornada de trabalho.'
               : 'Não foram encontrados registros para esta data.'}
@@ -125,26 +125,26 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
             return (
               <div
                 key={entry.id || idx}
-                className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] transition-colors"
+                className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#27272a] bg-[#1c1c20] hover:bg-[#27272a]/70 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
+                  <div className="p-2.5 rounded-[10px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-[#0a0a0a]">{details.label}</span>
+                      <span className="text-sm font-semibold text-[#fafafa]">{details.label}</span>
                       {entry.is_edited && (
                         <span
-                          className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#f5f5f5] text-[#171717] border border-[#e5e5e5]"
+                          className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#27272a] text-[#fafafa] border border-[#3f3f46]"
                         >
-                          <AlertTriangle className="h-3 w-3 text-[#737373]" />
+                          <AlertTriangle className="h-3 w-3 text-[#a1a1aa]" />
                           Ajustado
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-[#737373] font-mono mt-0.5">
-                      Horário: <span className="font-semibold text-[#0a0a0a]">{timeStr}</span>
+                    <div className="text-xs text-[#a1a1aa] font-mono mt-0.5">
+                      Horário: <span className="font-semibold text-[#fafafa]">{timeStr}</span>
                     </div>
                   </div>
                 </div>
@@ -154,7 +154,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     onClick={() => setSelectedEntry(entry)}
                     title="Ajustar horário"
                     aria-label="Ajustar horário"
-                    className="p-2 text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] rounded-[18px] transition-colors cursor-pointer"
+                    className="p-2 text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-[18px] transition-colors cursor-pointer"
                   >
                     <Edit3 className="h-4 w-4" />
                   </button>
@@ -163,7 +163,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     disabled={deletingId === entry.id}
                     title="Excluir marcação"
                     aria-label="Excluir marcação"
-                    className="p-2 text-[#737373] hover:text-[#e7000b] hover:bg-red-50 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
+                    className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

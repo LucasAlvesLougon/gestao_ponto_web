@@ -51,12 +51,12 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ month }) => {
         onClick={handleDownloadCsv}
         disabled={isExportingCsv}
         title="Baixar planilha CSV para Excel"
-        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-transparent hover:bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5] transition-colors cursor-pointer disabled:opacity-70"
+        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-[#1c1c20] hover:bg-[#27272a] text-[#fafafa] border border-[#27272a] transition-colors cursor-pointer disabled:opacity-70"
       >
         {isExportingCsv ? (
-          <Loader2 className="h-4 w-4 animate-spin text-[#0a0a0a]" />
+          <Loader2 className="h-4 w-4 animate-spin text-[#fafafa]" />
         ) : (
-          <Download className="h-4 w-4 text-[#737373]" />
+          <Download className="h-4 w-4 text-[#a1a1aa]" />
         )}
         <span>Exportar CSV</span>
       </button>
@@ -64,9 +64,9 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ month }) => {
       <button
         onClick={handlePrintPdf}
         title="Visualizar e imprimir espelho de ponto em PDF"
-        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] transition-colors cursor-pointer"
       >
-        <Printer className="h-4 w-4 text-[#fafafa]" />
+        <Printer className="h-4 w-4 text-[#09090b]" />
         <span>Imprimir / PDF</span>
       </button>
     </div>

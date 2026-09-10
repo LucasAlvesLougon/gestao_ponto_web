@@ -45,21 +45,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-[#ffffff] w-full max-w-md rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden text-[#0a0a0a]">
-        <div className="px-6 py-4 border-b border-[#e5e5e5] flex items-center justify-between">
-          <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">Configurações da Jornada</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+      <div className="bg-[#121214] w-full max-w-md rounded-[24px] card-shadow border border-[#27272a] overflow-hidden text-[#fafafa]">
+        <div className="px-6 py-4 border-b border-[#27272a] flex items-center justify-between">
+          <h3 className="font-semibold text-[#fafafa] text-sm tracking-tight">Configurações da Jornada</h3>
           <button
             onClick={onClose}
-            className="text-[#737373] hover:text-[#0a0a0a] p-1.5 rounded-[18px] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+            className="text-[#a1a1aa] hover:text-[#fafafa] p-1.5 rounded-[18px] hover:bg-[#1c1c20] transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {successMsg && (
-          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#fafafa] border border-[#e5e5e5] text-[#0a0a0a] text-xs flex items-center gap-2">
-            <Check className="h-4 w-4 text-[#0a0a0a]" />
+          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#1c1c20] border border-[#27272a] text-[#fafafa] text-xs flex items-center gap-2">
+            <Check className="h-4 w-4 text-[#fafafa]" />
             <span>{successMsg}</span>
           </div>
         )}
@@ -67,8 +67,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <form onSubmit={handleSave} className="p-6 space-y-5">
           {/* Meta Diária de Horas */}
           <div>
-            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
-              <Target className="h-4 w-4 text-[#0a0a0a]" />
+            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
+              <Target className="h-4 w-4 text-[#fafafa]" />
               Meta Diária de Horas
             </label>
             <div className="relative">
@@ -80,25 +80,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 required
                 value={dailyHours}
                 onChange={(e) => setDailyHours(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] text-sm bg-[#f5f5f5] focus:bg-[#ffffff] focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] font-mono font-medium text-[#0a0a0a]"
+                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] text-sm bg-[#1c1c20] focus:bg-[#27272a] focus:outline-none focus:border-[#fafafa] font-mono font-medium text-[#fafafa]"
               />
-              <span className="absolute right-4 top-2.5 text-xs text-[#737373] font-medium">horas / dia</span>
+              <span className="absolute right-4 top-2.5 text-xs text-[#a1a1aa] font-medium">horas / dia</span>
             </div>
-            <p className="text-[11px] text-[#737373] mt-1">
+            <p className="text-[11px] text-[#a1a1aa] mt-1">
               Padrão comum: 8 horas (tempo integral) ou 6 horas (estágio / meio período).
             </p>
           </div>
 
           {/* Fuso Horário */}
           <div>
-            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
-              <Globe className="h-4 w-4 text-[#0a0a0a]" />
+            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#a1a1aa] mb-1.5 flex items-center gap-1.5">
+              <Globe className="h-4 w-4 text-[#fafafa]" />
               Fuso Horário Principal
             </label>
             <select
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] text-sm bg-[#f5f5f5] focus:bg-[#ffffff] focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] text-[#0a0a0a]"
+              className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#27272a] text-sm bg-[#1c1c20] focus:bg-[#27272a] focus:outline-none focus:border-[#fafafa] text-[#fafafa] cursor-pointer"
             >
               <option value="America/Sao_Paulo">Brasília (GMT-3)</option>
               <option value="America/Manaus">Manaus (GMT-4)</option>
@@ -109,21 +109,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <option value="America/Rio_Branco">Rio Branco (GMT-5)</option>
               <option value="UTC">UTC (GMT+0)</option>
             </select>
-            <p className="text-[11px] text-[#737373] mt-1">Usado para calcular e exibir os horários exatos das batidas.</p>
+            <p className="text-[11px] text-[#a1a1aa] mt-1">Usado para calcular e exibir os horários exatos das batidas.</p>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#e5e5e5]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#27272a]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-medium text-[#fafafa] bg-[#1c1c20] hover:bg-[#27272a] border border-[#27272a] rounded-[18px] transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isUpdating}
-              className="px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="px-5 py-2.5 bg-[#fafafa] hover:bg-[#e4e4e7] text-[#09090b] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               {isUpdating ? (
                 <>

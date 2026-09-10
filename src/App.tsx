@@ -21,15 +21,15 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#f5f5f5]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#0a0a0a] mb-2" />
-        <p className="text-sm font-medium text-[#737373]">Carregando Gestão de Ponto...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#09090b]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#fafafa] mb-2" />
+        <p className="text-sm font-medium text-[#a1a1aa]">Carregando Gestão de Ponto...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] text-[#0a0a0a] flex flex-col">
+    <div className="min-h-screen bg-[#09090b] text-[#fafafa] flex flex-col">
       {isAuthenticated && user ? (
         <>
           <Navbar
