@@ -11,14 +11,14 @@ import {
 interface EditEntryModalProps {
   entry: TimeEntry | null
   onClose: () => void
-  onSave: (id: number, time: string, reason: string) => Promise<any>
+  onSave: (id: number, time: string, reason?: string) => Promise<any>
   isSaving: boolean
 }
 
 interface EditEntryFormProps {
   entry: TimeEntry
   onClose: () => void
-  onSave: (id: number, time: string, reason: string) => Promise<any>
+  onSave: (id: number, time: string, reason?: string) => Promise<any>
   isSaving: boolean
 }
 
@@ -37,7 +37,6 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
   const [timeInput, setTimeInput] = useState(() => {
     return `${pad(entryDate.getHours())}:${pad(entryDate.getMinutes())}`
   })
-  const [reason, setReason] = useState(entry.edit_reason || '')
   const [error, setError] = useState<string | null>(null)
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,11 +73,6 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
       return
     }
 
-    if (!reason || reason.trim().length < 5) {
-      setError('A justificativa é obrigatória (mínimo 5 caracteres).')
-      return
-    }
-
     const [d, m, y] = dateParts
     const [hh, mm] = timeParts
 
@@ -100,7 +94,7 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
     const isoDateTime = `${y}-${m}-${d}T${hh}:${mm}:00`
 
     try {
-      await onSave(entry.id, isoDateTime, reason.trim())
+      await onSave(entry.id, isoDateTime)
       onClose()
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Erro ao atualizar registro de ponto.'
@@ -118,17 +112,17 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-4">
       {error && (
-        <div className="p-3 rounded-xl bg-red-950/50 border border-red-900/60 text-red-300 text-xs flex items-center gap-2">
+        <div className="p-3 rounded-[18px] bg-red-50 border border-red-200 text-[#e7000b] text-xs flex items-center gap-2">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+        <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5">
           Tipo de Registro
         </label>
-        <div className="px-3.5 py-2.5 bg-slate-800/80 border border-slate-700/80 rounded-xl text-xs font-bold text-slate-200">
+        <div className="px-3.5 py-2 bg-[#f5f5f5] border border-[#e5e5e5] rounded-[18px] text-xs font-medium text-[#171717]">
           {typeLabels[entry.type] || entry.type}
         </div>
       </div>
@@ -136,8 +130,8 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
       {/* Data e Horário separados com teclado numérico */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5 text-blue-400" />
+          <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5 text-[#0a0a0a]" />
             <span>Data</span>
           </label>
           <input
@@ -149,14 +143,14 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
             placeholder="DD/MM/AAAA"
             maxLength={10}
             required
-            className="w-full px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-sm tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
+            className="w-full px-3.5 py-2 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
           />
-          <span className="text-[10px] text-slate-500 mt-1 block">Apenas números</span>
+          <span className="text-[10px] text-[#737373] mt-1 block">Apenas números</span>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-blue-400" />
+          <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5 text-[#0a0a0a]" />
             <span>Horário</span>
           </label>
           <input
@@ -168,40 +162,24 @@ const EditEntryForm: React.FC<EditEntryFormProps> = ({
             placeholder="HH:mm"
             maxLength={5}
             required
-            className="w-full px-3 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-sm tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
+            className="w-full px-3.5 py-2 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
           />
-          <span className="text-[10px] text-slate-500 mt-1 block">Ex: 0830 ➔ 08:30</span>
+          <span className="text-[10px] text-[#737373] mt-1 block">Ex: 0830 ➔ 08:30</span>
         </div>
       </div>
 
-      <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-          Justificativa da Alteração <span className="text-red-400">*</span>
-        </label>
-        <textarea
-          required
-          rows={3}
-          minLength={5}
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder="Ex: Esqueci de registrar na chegada; reunião externa..."
-          className="w-full px-3 py-2 rounded-xl border border-slate-700 text-sm bg-slate-950 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
-        />
-        <p className="text-[11px] text-slate-500 mt-1">O histórico original é preservado para conformidade e auditoria.</p>
-      </div>
-
-      <div className="flex items-center justify-end gap-2 pt-2">
+      <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#e5e5e5]">
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+          className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isSaving}
-          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-70 cursor-pointer"
+          className="px-5 py-2 bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 disabled:opacity-70 cursor-pointer"
         >
           {isSaving ? (
             <>
@@ -226,18 +204,15 @@ export const EditEntryModal: React.FC<EditEntryModalProps> = ({
   if (!entry) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl border border-slate-800 overflow-hidden transition-colors">
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">✏️</span>
-            <h3 className="font-bold text-slate-100 text-base">Ajustar Registro de Ponto</h3>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+      <div className="bg-[#ffffff] w-full max-w-md rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#e5e5e5] flex items-center justify-between">
+          <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">Ajustar Registro de Ponto</h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+            className="text-[#737373] hover:text-[#0a0a0a] p-1.5 rounded-[18px] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 

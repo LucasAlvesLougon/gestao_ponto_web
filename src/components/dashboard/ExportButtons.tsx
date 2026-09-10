@@ -51,12 +51,12 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ month }) => {
         onClick={handleDownloadCsv}
         disabled={isExportingCsv}
         title="Baixar planilha CSV para Excel"
-        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-xs transition-colors cursor-pointer disabled:opacity-70"
+        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-transparent hover:bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5] transition-colors cursor-pointer disabled:opacity-70"
       >
         {isExportingCsv ? (
-          <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
+          <Loader2 className="h-4 w-4 animate-spin text-[#0a0a0a]" />
         ) : (
-          <Download className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+          <Download className="h-4 w-4 text-[#737373]" />
         )}
         <span>Exportar CSV</span>
       </button>
@@ -64,9 +64,9 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ month }) => {
       <button
         onClick={handlePrintPdf}
         title="Visualizar e imprimir espelho de ponto em PDF"
-        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 shadow-xs transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 px-3.5 py-2 rounded-[18px] text-xs font-medium bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] transition-colors cursor-pointer"
       >
-        <Printer className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+        <Printer className="h-4 w-4 text-[#fafafa]" />
         <span>Imprimir / PDF</span>
       </button>
     </div>

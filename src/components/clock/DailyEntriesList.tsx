@@ -6,7 +6,7 @@ import { EditEntryModal } from './EditEntryModal'
 interface DailyEntriesListProps {
   entries: TimeEntry[]
   isLoading: boolean
-  onUpdate: (id: number, time: string, reason: string) => Promise<any>
+  onUpdate: (id: number, time: string, reason?: string) => Promise<any>
   onDelete: (id: number) => Promise<any>
   isUpdating: boolean
   isDeleting: boolean
@@ -65,45 +65,45 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+    <div className="bg-[#ffffff] rounded-[24px] p-6 border border-[#e5e5e5] card-shadow">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h3 className="text-base font-semibold text-[#0a0a0a] tracking-tight">
             {isToday ? 'Histórico de Hoje' : `Histórico do Dia (${dateFormatted})`}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Todas as marcações registradas para esta jornada</p>
+          <p className="text-xs text-[#737373] mt-0.5">Todas as marcações registradas para esta jornada</p>
         </div>
-        <div className="text-xs font-semibold px-3 py-1 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-700">
+        <div className="text-xs font-medium px-2.5 py-0.5 bg-[#f5f5f5] text-[#171717] rounded-[18px] border border-[#e5e5e5]">
           {entries.length} {entries.length === 1 ? 'registro' : 'registros'}
         </div>
       </div>
 
       {isLoading ? (
-        <div className="py-12 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 gap-2">
-          <Clock className="h-6 w-6 animate-spin text-blue-600 dark:text-blue-400" />
+        <div className="py-12 flex flex-col items-center justify-center text-[#737373] gap-2">
+          <Clock className="h-6 w-6 animate-spin text-[#0a0a0a]" />
           <span className="text-xs font-medium">Carregando marcações...</span>
         </div>
       ) : entries.length === 0 ? (
-        <div className="py-12 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50/50 dark:bg-slate-800/30">
-          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center mx-auto mb-3 text-xl">
+        <div className="py-12 text-center border border-dashed border-[#e5e5e5] rounded-[18px] bg-[#fafafa]">
+          <div className="w-10 h-10 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a] flex items-center justify-center mx-auto mb-3 text-base">
             📅
           </div>
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">
+          <h4 className="text-sm font-semibold text-[#0a0a0a]">
             {isToday ? 'Nenhum ponto registrado hoje' : `Nenhum ponto registrado em ${dateFormatted}`}
           </h4>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-[#737373] mt-1 max-w-sm mx-auto">
             {isToday
               ? 'Utilize as opções acima para registrar sua Entrada e iniciar o acompanhamento da jornada de trabalho.'
               : 'Não foram encontrados registros para esta data.'}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {entries.map((entry, idx) => {
             const details = typeDetails[entry.type] || {
               label: entry.type,
               icon: Clock,
-              color: 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+              color: '',
             }
             const Icon = details.icon
 
@@ -125,32 +125,26 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
             return (
               <div
                 key={entry.id || idx}
-                className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 dark:border-slate-800/80 hover:border-slate-200 dark:hover:border-slate-700 bg-slate-50/40 dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-colors"
+                className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl border ${details.color}`}>
+                  <div className="p-2.5 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-slate-900 dark:text-white">{details.label}</span>
+                      <span className="text-sm font-semibold text-[#0a0a0a]">{details.label}</span>
                       {entry.is_edited && (
                         <span
-                          title={`Editado: ${entry.edit_reason}`}
-                          className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60"
+                          className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#f5f5f5] text-[#171717] border border-[#e5e5e5]"
                         >
-                          <AlertTriangle className="h-3 w-3" />
+                          <AlertTriangle className="h-3 w-3 text-[#737373]" />
                           Ajustado
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">
-                      Horário: <span className="font-semibold text-slate-700 dark:text-slate-300">{timeStr}</span>
-                      {entry.edit_reason && (
-                        <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-sans italic mt-0.5">
-                          Motivo: {entry.edit_reason}
-                        </span>
-                      )}
+                    <div className="text-xs text-[#737373] font-mono mt-0.5">
+                      Horário: <span className="font-semibold text-[#0a0a0a]">{timeStr}</span>
                     </div>
                   </div>
                 </div>
@@ -160,7 +154,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     onClick={() => setSelectedEntry(entry)}
                     title="Ajustar horário"
                     aria-label="Ajustar horário"
-                    className="p-2 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 rounded-xl transition-colors cursor-pointer"
+                    className="p-2 text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] rounded-[18px] transition-colors cursor-pointer"
                   >
                     <Edit3 className="h-4 w-4" />
                   </button>
@@ -169,7 +163,7 @@ export const DailyEntriesList: React.FC<DailyEntriesListProps> = ({
                     disabled={deletingId === entry.id}
                     title="Excluir marcação"
                     aria-label="Excluir marcação"
-                    className="p-2 text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+                    className="p-2 text-[#737373] hover:text-[#e7000b] hover:bg-red-50 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

@@ -21,15 +21,15 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-2" />
-        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Carregando Gestão de Ponto...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#f5f5f5]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#0a0a0a] mb-2" />
+        <p className="text-sm font-medium text-[#737373]">Carregando Gestão de Ponto...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[#f5f5f5] text-[#0a0a0a] flex flex-col">
       {isAuthenticated && user ? (
         <>
           <Navbar
@@ -44,7 +44,7 @@ export default function App() {
             {activeTab === 'clock' ? (
               <Dashboard user={user} />
             ) : (
-              <div className="py-8 px-4 sm:px-6 max-w-5xl mx-auto">
+              <div className="py-8 px-4 sm:px-6 max-w-[1280px] mx-auto">
                 <MonthlyDashboard />
               </div>
             )}

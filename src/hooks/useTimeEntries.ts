@@ -42,10 +42,10 @@ export function useTimeEntries(date: string) {
 
   // Mutação para editar registro
   const updateMutation = useMutation({
-    mutationFn: async ({ id, time, reason }: { id: number; time: string; reason: string }) => {
+    mutationFn: async ({ id, time, reason }: { id: number; time: string; reason?: string }) => {
       const response = await api.put<{ message: string; entry: TimeEntry }>(`/time-entries/${id}`, {
         time,
-        reason,
+        ...(reason ? { reason } : {}),
       })
       return response.data
     },

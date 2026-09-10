@@ -51,7 +51,6 @@ describe('Clock Components', () => {
     expect(screen.getByText('Histórico de Hoje')).toBeDefined()
     expect(screen.getByText('Entrada')).toBeDefined()
     expect(screen.getByText('Ajustado')).toBeDefined()
-    expect(screen.getByText(/Motivo: Esqueci de bater ponto/i)).toBeDefined()
   })
 
   it('renders empty state when no entries', () => {

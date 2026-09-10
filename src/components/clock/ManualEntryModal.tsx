@@ -74,45 +74,30 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
     title: string
     subtitle: string
     icon: React.ComponentType<{ className?: string }>
-    activeBorder: string
-    activeBg: string
-    iconColor: string
   }[] = [
     {
       type: 'CLOCK_IN',
       title: 'Entrada',
       subtitle: 'Início do expediente',
       icon: Play,
-      activeBorder: 'border-emerald-500 ring-2 ring-emerald-500/20',
-      activeBg: 'bg-emerald-950/40 text-emerald-300',
-      iconColor: 'text-emerald-400',
     },
     {
       type: 'BREAK_START',
       title: 'Início Intervalo',
       subtitle: 'Almoço ou pausa',
       icon: Coffee,
-      activeBorder: 'border-amber-500 ring-2 ring-amber-500/20',
-      activeBg: 'bg-amber-950/40 text-amber-300',
-      iconColor: 'text-amber-400',
     },
     {
       type: 'BREAK_END',
       title: 'Retorno Intervalo',
       subtitle: 'Retomar jornada',
       icon: ArrowLeft,
-      activeBorder: 'border-blue-500 ring-2 ring-blue-500/20',
-      activeBg: 'bg-blue-950/40 text-blue-300',
-      iconColor: 'text-blue-400',
     },
     {
       type: 'CLOCK_OUT',
       title: 'Saída',
       subtitle: 'Fim do expediente',
       icon: LogOut,
-      activeBorder: 'border-rose-500 ring-2 ring-rose-500/20',
-      activeBg: 'bg-rose-950/40 text-rose-300',
-      iconColor: 'text-rose-400',
     },
   ]
 
@@ -238,36 +223,36 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-      <div className="bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+      <div className="bg-[#ffffff] w-full max-w-lg rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden text-[#0a0a0a]">
         {/* Top Header */}
-        <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-[#e5e5e5] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-950/60 text-blue-400 border border-blue-900/60">
+            <div className="p-2 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-base">Marcação Manual de Ponto</h3>
-              <p className="text-xs text-slate-400">Escolha o tipo e informe data e hora pelo teclado</p>
+              <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">Marcação Manual de Ponto</h3>
+              <p className="text-xs text-[#737373]">Escolha o tipo e informe data e hora pelo teclado</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-[18px] text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
         {successMsg && (
-          <div className="mx-6 mt-4 p-3.5 rounded-2xl bg-emerald-950/50 border border-emerald-800/60 text-emerald-300 text-xs flex items-center gap-2">
-            <Check className="h-4 w-4 shrink-0 text-emerald-400" />
+          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-[#fafafa] border border-[#e5e5e5] text-[#0a0a0a] text-xs flex items-center gap-2">
+            <Check className="h-4 w-4 shrink-0 text-[#0a0a0a]" />
             <span>{successMsg}</span>
           </div>
         )}
 
         {error && (
-          <div className="mx-6 mt-4 p-3.5 rounded-2xl bg-red-950/50 border border-red-900/60 text-red-300 text-xs flex items-center gap-2">
+          <div className="mx-6 mt-4 p-3 rounded-[18px] bg-red-50 border border-red-200 text-[#e7000b] text-xs flex items-center gap-2">
             <span>⚠️</span>
             <span>{error}</span>
           </div>
@@ -276,7 +261,7 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* 4 LAYERS DE TIPOS DE REGISTRO */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">
+            <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-3">
               1. Selecione o Tipo de Batida (4 Layers)
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -289,21 +274,21 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                     key={layer.type}
                     type="button"
                     onClick={() => setSelectedType(layer.type)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all duration-150 flex items-center gap-3 cursor-pointer ${
+                    className={`p-3.5 rounded-[18px] border text-left transition-colors flex items-center gap-3 cursor-pointer ${
                       isSelected
-                        ? `${layer.activeBorder} ${layer.activeBg} shadow-md`
-                        : 'border-slate-800 bg-slate-950/60 hover:bg-slate-800/80 text-slate-300'
+                        ? 'border-[#0a0a0a] bg-[#fafafa] ring-1 ring-[#0a0a0a] text-[#0a0a0a]'
+                        : 'border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] text-[#0a0a0a]'
                     }`}
                   >
-                    <div className={`p-2 rounded-xl bg-slate-900 border border-slate-800 shrink-0 ${layer.iconColor}`}>
+                    <div className={`p-2 rounded-[10px] shrink-0 ${isSelected ? 'bg-[#0a0a0a] text-[#fafafa]' : 'bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]'}`}>
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-white flex items-center justify-between">
+                      <div className="text-xs font-semibold text-[#0a0a0a] flex items-center justify-between">
                         <span>{layer.title}</span>
-                        {isSelected && <Check className="h-4 w-4 text-emerald-400" />}
+                        {isSelected && <Check className="h-4 w-4 text-[#0a0a0a]" />}
                       </div>
-                      <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                      <div className="text-[11px] text-[#737373] truncate mt-0.5">
                         {layer.subtitle}
                       </div>
                     </div>
@@ -317,8 +302,8 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Campo 1: Data */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-blue-400" />
+              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
+                <Calendar className="h-4 w-4 text-[#0a0a0a]" />
                 Data (DD/MM/AAAA)
               </label>
               <input
@@ -329,17 +314,17 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                 onChange={handleDateChange}
                 onBlur={handleDateBlur}
                 placeholder="DD/MM/AAAA"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-base font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">
+              <span className="text-[10px] text-[#737373] mt-1 block">
                 Insira apenas números (ex: 10092026)
               </span>
             </div>
 
             {/* Campo 2: Horário */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-emerald-400" />
+              <label className="block text-xs font-medium uppercase tracking-[0.05em] text-[#737373] mb-1.5 flex items-center gap-1.5">
+                <Clock className="h-4 w-4 text-[#0a0a0a]" />
                 Horário (HH:mm)
               </label>
               <input
@@ -350,33 +335,33 @@ export const ManualEntryModal: React.FC<ManualEntryModalProps> = ({
                 onChange={handleTimeChange}
                 onBlur={handleTimeBlur}
                 placeholder="HH:mm"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-950 text-white font-mono text-base font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-[18px] border border-[#e5e5e5] bg-[#f5f5f5] focus:bg-[#ffffff] text-[#0a0a0a] font-mono text-sm tracking-wider focus:outline-none focus:ring-1 focus:ring-[#0a0a0a] transition-colors"
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">
+              <span className="text-[10px] text-[#737373] mt-1 block">
                 Insira apenas números (ex: 0830)
               </span>
             </div>
           </div>
 
           {/* Dica de autocorreção */}
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-[11px] text-slate-400">
-            <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+          <div className="flex items-center gap-2 p-3 rounded-[18px] bg-[#fafafa] border border-[#e5e5e5] text-[11px] text-[#737373]">
+            <Sparkles className="h-4 w-4 text-[#0a0a0a] shrink-0" />
             <span>O sistema formata e autocorrige limites de dias, meses e horários automaticamente.</span>
           </div>
 
           {/* Botões de Ação */}
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#e5e5e5]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 text-xs font-semibold text-slate-400 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
             >
               {successMsg ? 'Fechar' : 'Cancelar'}
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-md shadow-blue-600/20 cursor-pointer disabled:opacity-70"
+              className="px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium rounded-[18px] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               {isSaving ? (
                 <>

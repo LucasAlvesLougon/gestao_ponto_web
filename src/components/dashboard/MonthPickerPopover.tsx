@@ -85,25 +85,25 @@ export const MonthPickerPopover: React.FC<MonthPickerPopoverProps> = ({
   return (
     <div
       ref={popoverRef}
-      className="absolute right-0 top-full mt-2 z-50 w-72 bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150"
+      className="absolute right-0 top-full mt-2 z-50 w-72 bg-[#ffffff] border border-[#e5e5e5] rounded-[24px] p-4 card-shadow animate-in fade-in zoom-in-95 duration-150 text-[#0a0a0a]"
     >
       {/* Seletor de Ano */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#e5e5e5]">
         <button
           type="button"
           onClick={() => setDisplayYear((y) => y - 1)}
-          className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="p-1.5 rounded-[18px] hover:bg-[#f5f5f5] text-[#737373] hover:text-[#0a0a0a] transition-colors cursor-pointer"
           title="Ano anterior"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
 
-        <span className="font-mono font-bold text-sm text-white">{displayYear}</span>
+        <span className="font-mono font-semibold text-sm text-[#0a0a0a]">{displayYear}</span>
 
         <button
           type="button"
           onClick={() => setDisplayYear((y) => y + 1)}
-          className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="p-1.5 rounded-[18px] hover:bg-[#f5f5f5] text-[#737373] hover:text-[#0a0a0a] transition-colors cursor-pointer"
           title="Próximo ano"
         >
           <ChevronRight className="h-4 w-4" />
@@ -122,12 +122,12 @@ export const MonthPickerPopover: React.FC<MonthPickerPopoverProps> = ({
               type="button"
               onClick={() => handleSelectMonth(m.num)}
               title={m.full}
-              className={`py-2 px-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-center ${
+              className={`py-2 px-2.5 rounded-[18px] text-xs transition-colors cursor-pointer text-center ${
                 isSelected
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 ring-2 ring-blue-400/40 font-bold'
+                  ? 'bg-[#0a0a0a] text-[#fafafa] font-medium'
                   : isCurrent
-                  ? 'bg-slate-800/80 text-blue-400 border border-blue-500/40 hover:bg-slate-800'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5] font-medium'
+                  : 'text-[#737373] hover:bg-[#f5f5f5] hover:text-[#0a0a0a]'
               }`}
             >
               {m.short}
@@ -137,13 +137,13 @@ export const MonthPickerPopover: React.FC<MonthPickerPopoverProps> = ({
       </div>
 
       {/* Ação rápida: Mês Atual */}
-      <div className="pt-2.5 border-t border-slate-800 flex items-center justify-between">
+      <div className="pt-2.5 border-t border-[#e5e5e5] flex items-center justify-between">
         <button
           type="button"
           onClick={handleGoToCurrentMonth}
-          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-[11px] font-semibold text-blue-400 hover:text-blue-300 hover:bg-slate-800/60 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-[18px] text-xs font-medium text-[#0a0a0a] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
         >
-          <Calendar className="h-3 w-3" />
+          <Calendar className="h-3.5 w-3.5 text-[#0a0a0a]" />
           <span>Ir para o mês atual</span>
         </button>
       </div>

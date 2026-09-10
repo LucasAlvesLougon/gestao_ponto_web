@@ -78,47 +78,47 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
     await recordEntry({ type, customTime })
   }
 
-  const handleEditSave = async (id: number, time: string, reason: string) => {
+  const handleEditSave = async (id: number, time: string, reason?: string) => {
     await updateEntry({ id, time, reason })
     setEditingEntry(null)
   }
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-        <div className="bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-800 overflow-hidden transition-colors flex flex-col max-h-[90vh]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+        <div className="bg-[#ffffff] w-full max-w-2xl rounded-[24px] card-shadow border border-[#e5e5e5] overflow-hidden flex flex-col max-h-[90vh] text-[#0a0a0a]">
           {/* Header */}
-          <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <div className="px-6 py-5 border-b border-[#e5e5e5] flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-blue-950/60 border border-blue-900/60 text-blue-400">
+              <div className="p-2 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a]">
                 <Calendar className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-base">
+                <h3 className="font-semibold text-[#0a0a0a] text-sm tracking-tight">
                   Detalhamento do Dia — {formattedDate}
                 </h3>
-                <p className="text-xs text-slate-400 capitalize">{formattedWeekday}</p>
+                <p className="text-xs text-[#737373] capitalize">{formattedWeekday}</p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+              className="text-[#737373] hover:text-[#0a0a0a] p-1.5 rounded-[18px] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Subheader / Ações Rápidas */}
-          <div className="px-6 py-3 bg-slate-950/50 border-b border-slate-800/60 flex items-center justify-between shrink-0">
-            <div className="text-xs text-slate-400">
-              <span className="font-semibold text-slate-200">{entries.length}</span>{' '}
+          <div className="px-6 py-3 bg-[#fafafa] border-b border-[#e5e5e5] flex items-center justify-between shrink-0">
+            <div className="text-xs text-[#737373]">
+              <span className="font-semibold text-[#0a0a0a]">{entries.length}</span>{' '}
               {entries.length === 1 ? 'marcação registrada' : 'marcações registradas'}
             </div>
 
             <button
               onClick={() => setIsManualModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[18px] bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium transition-colors cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Adicionar Batida</span>
@@ -128,22 +128,22 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
           {/* Conteúdo Principal */}
           <div className="p-6 overflow-y-auto space-y-3">
             {isLoading ? (
-              <div className="py-12 flex flex-col items-center justify-center text-slate-500 gap-2">
-                <Clock className="h-6 w-6 animate-spin text-blue-400" />
+              <div className="py-12 flex flex-col items-center justify-center text-[#737373] gap-2">
+                <Clock className="h-6 w-6 animate-spin text-[#0a0a0a]" />
                 <span className="text-xs font-medium">Carregando batidas do dia...</span>
               </div>
             ) : entries.length === 0 ? (
-              <div className="py-12 text-center border-2 border-dashed border-slate-800 rounded-2xl bg-slate-950/30">
-                <div className="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3 text-xl">
+              <div className="py-12 text-center border border-dashed border-[#e5e5e5] rounded-[18px] bg-[#fafafa]">
+                <div className="w-10 h-10 rounded-[10px] bg-[#f5f5f5] border border-[#e5e5e5] text-[#0a0a0a] flex items-center justify-center mx-auto mb-3 text-base">
                   📅
                 </div>
-                <h4 className="text-sm font-bold text-slate-300">Nenhum registro nesta data</h4>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto mb-4">
+                <h4 className="text-sm font-semibold text-[#0a0a0a]">Nenhum registro nesta data</h4>
+                <p className="text-xs text-[#737373] mt-1 max-w-sm mx-auto mb-4">
                   Você não possui batidas cadastradas para este dia. Adicione manualmente se esqueceu de registrar o ponto.
                 </p>
                 <button
                   onClick={() => setIsManualModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[18px] bg-[#0a0a0a] hover:bg-[#171717] text-[#fafafa] text-xs font-medium transition-colors cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Cadastrar Registro Manual</span>
@@ -155,7 +155,6 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                   const details = typeDetails[entry.type] || {
                     label: entry.type,
                     icon: Clock,
-                    color: 'bg-slate-800 text-slate-300 border-slate-700',
                   }
                   const Icon = details.icon
 
@@ -171,34 +170,28 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                   return (
                     <div
                       key={entry.id || idx}
-                      className="flex items-center justify-between p-3.5 rounded-2xl border border-slate-800/80 bg-slate-800/40 hover:bg-slate-800/70 transition-colors"
+                      className="flex items-center justify-between p-3.5 rounded-[18px] border border-[#e5e5e5] bg-[#ffffff] hover:bg-[#fafafa] transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`p-2.5 rounded-xl border ${details.color}`}>
+                        <div className="p-2 rounded-[10px] bg-[#f5f5f5] text-[#0a0a0a] border border-[#e5e5e5]">
                           <Icon className="h-4 w-4" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-white">
+                            <span className="text-sm font-semibold text-[#0a0a0a]">
                               {details.label}
                             </span>
                             {entry.is_edited && (
                               <span
-                                title={`Motivo: ${entry.edit_reason}`}
-                                className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-950/50 text-amber-400 border border-amber-800/60"
+                                className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-[18px] bg-[#f5f5f5] text-[#171717] border border-[#e5e5e5]"
                               >
-                                <AlertTriangle className="h-3 w-3" />
+                                <AlertTriangle className="h-3 w-3 text-[#737373]" />
                                 Ajustado
                               </span>
                             )}
                           </div>
-                          <div className="text-xs text-slate-400 font-mono mt-0.5">
-                            Horário: <span className="font-semibold text-slate-200">{timeStr}</span>
-                            {entry.edit_reason && (
-                              <span className="block text-[11px] text-slate-400 font-sans italic mt-0.5">
-                                Motivo: {entry.edit_reason}
-                              </span>
-                            )}
+                          <div className="text-xs text-[#737373] font-mono mt-0.5">
+                            Horário: <span className="font-semibold text-[#0a0a0a]">{timeStr}</span>
                           </div>
                         </div>
                       </div>
@@ -208,7 +201,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                           onClick={() => setEditingEntry(entry)}
                           title="Ajustar horário ou data"
                           aria-label="Ajustar horário ou data"
-                          className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-950/50 rounded-xl transition-colors cursor-pointer"
+                          className="p-2 text-[#737373] hover:text-[#0a0a0a] hover:bg-[#f5f5f5] rounded-[18px] transition-colors cursor-pointer"
                         >
                           <Edit3 className="h-4 w-4" />
                         </button>
@@ -217,7 +210,7 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
                           disabled={deletingId === entry.id || isDeleting}
                           title="Excluir marcação"
                           aria-label="Excluir marcação"
-                          className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-950/50 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+                          className="p-2 text-[#737373] hover:text-[#e7000b] hover:bg-red-50 rounded-[18px] transition-colors cursor-pointer disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -230,10 +223,10 @@ export const DayEntriesModal: React.FC<DayEntriesModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 border-t border-slate-800 flex items-center justify-end shrink-0">
+          <div className="px-6 py-3 border-t border-[#e5e5e5] flex items-center justify-end shrink-0">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2 text-xs font-medium text-[#0a0a0a] bg-[#f5f5f5] hover:bg-[#e5e5e5] rounded-[18px] transition-colors cursor-pointer"
             >
               Fechar
             </button>
