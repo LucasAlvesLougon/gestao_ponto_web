@@ -290,6 +290,16 @@ function AuthPageContent({
             </a>
             .
           </p>
+
+          {/* Badge Neon Red - Lucas Lougon */}
+          <div className="mt-8 flex items-center justify-center">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-red-500/50 bg-red-950/30 backdrop-blur-sm shadow-[0_0_15px_rgba(255,0,51,0.25)]">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#ff0033] shadow-[0_0_8px_#ff0033] animate-pulse" />
+              <span className="font-mono text-xs font-bold tracking-widest uppercase text-[#ff0033] drop-shadow-[0_0_10px_rgba(255,0,51,0.9)]">
+                ⚡ Lucas Lougon ⚡
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
