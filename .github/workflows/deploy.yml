@@ -33,13 +33,23 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://api.muponto.com/api/v1' }}
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || '283172265638-2cib86k0v38qmjae78snu5ps1p4sd513.apps.googleusercontent.com' }}
 
-      - name: 🧹 Sanitizar Endereço do Servidor FTP
+      - name: 🧹 Sanitizar Configurações FTP
         id: parse_ftp
         run: |
           RAW_SERVER="${{ secrets.FTP_SERVER }}"
           # Remove qualquer prefixo ftp://, ftps://, http://, https:// e barras finais
           CLEAN_SERVER=$(echo "$RAW_SERVER" | sed -E 's|^[a-zA-Z]+://||' | sed -E 's|/.*$||' | tr -d '[:space:]')
           echo "server=$CLEAN_SERVER" >> $GITHUB_OUTPUT
+
+          RAW_DIR="${{ secrets.FTP_SERVER_DIR }}"
+          # Na Hostinger, contas FTP criadas para um domínio já iniciam dentro de public_html.
+          # Se o diretório for vazio ou contiver public_html, usamos './' para publicar na raiz do site.
+          if [ -z "$RAW_DIR" ] || echo "$RAW_DIR" | grep -qi "public_html"; then
+            CLEAN_DIR="./"
+          else
+            CLEAN_DIR="$RAW_DIR"
+          fi
+          echo "dir=$CLEAN_DIR" >> $GITHUB_OUTPUT
 
       - name: 🚀 Deploy FTP para a Hostinger
         if: ${{ steps.parse_ftp.outputs.server != '' }}
@@ -51,5 +61,6 @@ jobs:
           port: ${{ secrets.FTP_PORT || 21 }}
           protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
           local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './public_html/' }}
+          server-dir: ${{ steps.parse_ftp.outputs.dir }}
           dangerous-clean-slate: false
+
